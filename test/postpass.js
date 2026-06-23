@@ -1,10 +1,10 @@
 const assert = require('assert')
 const BoundingBox = require('boundingbox')
 
-const defines = require('../src/defines')
-const Filter = require('../src/Filter')
+const Filter = require('@geowiki-net/geowiki-api/src/Filter')
 const DBTypePostpass = require('../src/DBTypePostpass')
-const GeowikiAPI = require('..')
+const GeowikiAPI = require('@geowiki-net/geowiki-api')
+const defines = GeowikiAPI
 
 const queryList = {
   'nwr': {

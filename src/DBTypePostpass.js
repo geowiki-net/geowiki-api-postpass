@@ -1,4 +1,4 @@
-const defines = require('./defines')
+const GeowikiAPI = require('@geowiki-net/geowiki-api')
 
 const postOp = {
   '=': '=',
@@ -12,7 +12,7 @@ const tables = {
   relation: "(SELECT osm_id, osm_type, tags, geom FROM postpass_pointlinepolygon WHERE osm_type='R')"
 }
 
-module.exports = class DBTypePostpass {
+class DBTypePostpass {
   constructor (url, options) {
     this.url = url
     this.options = options
@@ -49,10 +49,10 @@ module.exports = class DBTypePostpass {
     const fields = ['t.osm_id', 't.osm_type', 't.geom']
     let table = tables[stmt.type] + ' t'
 
-    if (options.properties & defines.TAGS) {
+    if (options.properties & GeowikiAPI.TAGS) {
       fields.push('t.tags')
     }
-    if (options.properties & defines.MEMBERS) {
+    if (options.properties & GeowikiAPI.MEMBERS) {
       if (stmt.type === 'node') {
         fields.push('\'{}\'::bigint[] as "nodes"')
         fields.push('\'{}\'::jsonb as "members"')
@@ -101,3 +101,6 @@ module.exports = class DBTypePostpass {
 function quote (str) {
   return "'" + str.replace(/'/g, "\\'") + "'"
 }
+
+GeowikiAPI.registerDBType('postpass', DBTypePostpass)
+module.exports = DBTypePostpass
