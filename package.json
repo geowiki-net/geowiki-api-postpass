@@ -1,0 +1,22 @@
+{
+  "name": "@geowiki-net/geowiki-api-postpass",
+  "version": "0.0.0",
+  "description": "Use GeowikiAPI with a postpass backend",
+  "main": "src/DBTypePostpass.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geowiki-net/geowiki-api-postpass.git"
+  },
+  "author": "Stephan Bösch-Plepelits <skunk@xover.mud.at>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/geowiki-net/geowiki-api-postpass/issues"
+  },
+  "homepage": "https://github.com/geowiki-net/geowiki-api-postpass#readme"
+}
