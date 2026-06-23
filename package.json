@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --bail"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/geowiki-net/geowiki-api-postpass/issues"
   },
-  "homepage": "https://github.com/geowiki-net/geowiki-api-postpass#readme"
+  "homepage": "https://github.com/geowiki-net/geowiki-api-postpass#readme",
+  "dependencies": {
+    "@geowiki-net/geowiki-api": "github:geowiki-net/geowiki-api#postpass"
+  },
+  "devDependencies": {
+    "mocha": "^11.7.6"
+  }
 }
