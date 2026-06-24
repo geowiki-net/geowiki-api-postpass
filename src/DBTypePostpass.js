@@ -96,10 +96,51 @@ class DBTypePostpass {
         return column + postOp[filter.op] + value
     }
   }
+
+  execute (context, callback) {
+    fetch(this.url + '/interpreter', {
+      method: 'POST',
+      body: new URLSearchParams({data: context.query})
+    })
+      .then(req => req.json())
+      .then(result => {
+        callback(null, convertToOSMJSON(result))
+      })
+  }
 }
 
 function quote (str) {
   return "'" + str.replace(/'/g, "\\'") + "'"
+}
+
+function convertToOSMJSON (data) {
+  const types = { N: 'node', W: 'way', R: 'relation' }
+  const result = {
+    version: 0.6,
+    generator: data.postpass_properties.generator,
+    timestamp: data.postpass_properties.timestamp,
+    elements: []
+  }
+
+  data.features.forEach(feature => {
+    const item = {
+      id: feature.properties.osm_id,
+      type: types[feature.properties.osm_type]
+    }
+
+    if ('tags' in feature.properties) {
+      item.tags = feature.properties.tags
+    }
+
+    if (item.type === 'node' && feature.geometry && feature.geometry.type === 'Point') {
+      item.lat = feature.geometry.coordinates[1]
+      item.lon = feature.geometry.coordinates[0]
+    }
+
+    result.elements.push(item)
+  })
+
+  return result
 }
 
 GeowikiAPI.registerDBType('postpass', DBTypePostpass)

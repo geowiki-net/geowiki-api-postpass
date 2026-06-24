@@ -62,8 +62,8 @@ describe('DBTypePostpass', function () {
   let geowiki
 
   it('initialize', function () {
-    db = new DBTypePostpass('', {})
-    geowiki = new GeowikiAPI('', {
+    db = new DBTypePostpass(config.url, {})
+    geowiki = new GeowikiAPI(config.url, {
       dbType: 'postpass'
     })
   })
@@ -123,6 +123,7 @@ describe('DBTypePostpass', function () {
   })
 
   describe('BBoxQuery', function () {
+      this.timeout(5000)
     Object.entries(queryList).forEach(([query, def]) => {
       it(query, function (done) {
         geowiki.BBoxQuery(
@@ -130,10 +131,14 @@ describe('DBTypePostpass', function () {
           { minlat: 48.19, maxlat: 48.20, minlon: 16.33, maxlon: 16.34 },
           {
             out: 'json',
-            outOptions: 'tags'
+            outOptions: 'tags',
+            each: (ob) => {
+              console.log('each', ob.id)
+            }
+
           },
           (err, result) => {
-            //console.log(JSON.stringify(result, null, '  '))
+            console.log(JSON.stringify(result, null, '  '))
             done(err)
           }
         )
