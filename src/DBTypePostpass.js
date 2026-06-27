@@ -5,6 +5,9 @@ const postOp = {
   '~': '~',
 }
 
+const typePostToOSM = { N: 'node', W: 'way', R: 'relation' }
+const typeOSMToPost = { node: 'N', way: 'W', relation: 'R' }
+
 const tables = {
   nwr: 'postpass_pointlinepolygon',
   node: 'postpass_point',
@@ -24,6 +27,26 @@ class DBTypePostpass {
     let result = this.compileStmt(stmt, options)
     if (options.bounds) {
       result = 'SELECT * FROM (' + result + ') WHERE geom && st_setsrid(st_makebox2d(st_makepoint(' + options.bounds.minlon + ',' + options.bounds.minlat + '), st_makepoint(' + options.bounds.maxlon + ',' + options.bounds.maxlat + ')), 4326)'
+    }
+
+    if (options.doneFeatures) {
+      let done = ''
+      const donePerType = {}
+      Object.values(options.doneFeatures).forEach(item => {
+        if (!(item.type in donePerType)) {
+          donePerType[item.type] = []
+        }
+        donePerType[item.type].push(item.osm_id)
+      })
+
+      const where = []
+      Object.entries(donePerType).forEach(([type, ids]) => {
+        where.push('NOT (osm_type=' + quote(typeOSMToPost[type]) + ' AND osm_id = ANY(ARRAY[' + ids.join(',') + ']))')
+      })
+
+      if (where.length) {
+        result = 'SELECT * FROM (' + result + ') WHERE ' + where.join(' AND ')
+      }
     }
 
     return result
@@ -118,7 +141,6 @@ function quote (str) {
 }
 
 function convertToOSMJSON (data) {
-  const types = { N: 'node', W: 'way', R: 'relation' }
   const result = {
     version: 0.6,
     generator: data.postpass_properties.generator,
@@ -129,7 +151,7 @@ function convertToOSMJSON (data) {
   data.features.forEach(feature => {
     const item = {
       id: feature.properties.osm_id,
-      type: types[feature.properties.osm_type]
+      type: typePostToOSM[feature.properties.osm_type]
     }
 
     if ('tags' in feature.properties) {
