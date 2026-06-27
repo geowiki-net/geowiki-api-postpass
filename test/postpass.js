@@ -5,6 +5,7 @@ const Filter = require('@geowiki-net/geowiki-api/src/Filter')
 const DBTypePostpass = require('../src/DBTypePostpass')
 const GeowikiAPI = require('@geowiki-net/geowiki-api')
 const defines = GeowikiAPI
+const config = require('./config.json')
 
 const queryList = {
   'nwr': {
@@ -125,6 +126,10 @@ describe('DBTypePostpass', function () {
   describe('BBoxQuery', function () {
       this.timeout(5000)
     Object.entries(queryList).forEach(([query, def]) => {
+      if (def.bboxquery === false) {
+        return
+      }
+
       it(query, function (done) {
         geowiki.BBoxQuery(
           query,

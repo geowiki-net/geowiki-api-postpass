@@ -72,12 +72,16 @@ class DBTypePostpass {
     const filters = stmt.filters.map(filter => {
       if (filter.fun === 'id') {
         return 'osm_id = ANY(\'{' + filter.value.join(',') + '}\')'
+      } else if (filter.fun === 'properties') {
+        return null
+      } else if (filter.fun === 'bbox') {
+        return 'geom && st_setsrid(st_makebox2d(st_makepoint(' + filter.value.minlon + ',' + filter.value.minlat + '), st_makepoint(' + filter.value.maxlon + ',' + filter.value.maxlat + ')), 4326)'
       } else if (filter.op) {
         return this.compileOp(filter)
       } else {
         throw new Error("Don't know how to compile filter: " + JSON.stringify(filter))
       }
-    }).join(' AND ')
+    }).filter(r => r !== null).join(' AND ')
 
     return filters
   }
