@@ -84,7 +84,7 @@ class DBTypePostpass {
         })
 
         result.forEach(r => {
-          r.where = '(' + r.where.map(w => '(' + w + ')').join(' OR ') + ')'
+          r.where = ['(' + r.where.map(w => '(' + w.join(' AND ') + ')').join(' OR ') + ')']
         })
 
         if (result.length > 1) {
@@ -137,7 +137,7 @@ class DBTypePostpass {
       } else {
         throw new Error("Don't know how to compile filter: " + JSON.stringify(filter))
       }
-    }).filter(r => r !== null).join(' AND ')
+    }).filter(r => r !== null)
 
     return filters
   }
@@ -203,8 +203,8 @@ function convertToOSMJSON (data) {
 
 function compileSelect (def) {
   let result = 'SELECT ' + def.select + ' FROM ' + def.table
-  if (def.where) {
-    result += ' WHERE ' + def.where
+  if (def.where && def.where.length) {
+    result += ' WHERE ' + def.where.join(' AND ')
   }
 
   return result
