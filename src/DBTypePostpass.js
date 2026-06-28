@@ -154,13 +154,31 @@ class DBTypePostpass {
   }
 
   execute (context, callback) {
+    console.log(context.query)
     fetch(this.url + '/interpreter', {
       method: 'POST',
       body: new URLSearchParams({data: context.query})
     })
-      .then(req => req.json())
+      .then(req => req.text())
       .then(result => {
-        callback(null, convertToOSMJSON(result))
+        try {
+          result = JSON.parse(result)
+        }
+        catch (err) {
+          return global.setTimeout(() => callback(new Error('Unexpected result: ' + result)), 0)
+        }
+
+        try {
+          result = convertToOSMJSON(result)
+        }
+        catch (err) {
+          return global.setTimeout(() => callback(err), 0)
+        }
+
+        global.setTimeout(() => callback(null, result), 0)
+      })
+      .catch(err => {
+        global.setTimeout(() => callback(err), 0)
       })
   }
 }
