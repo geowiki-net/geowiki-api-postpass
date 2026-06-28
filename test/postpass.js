@@ -29,26 +29,44 @@ const queryList = {
     'tags-members': "SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_pointlinepolygon WHERE osm_type='R') t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id"
   },
   'nwr[amenity=restaurant]': {
+    'bboxquery': {
+      expectedElements: 9
+    },
     'tags': "SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM postpass_pointlinepolygon t WHERE t.tags->>'amenity'='restaurant'",
     'tags-members': "SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM postpass_pointlinepolygon t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id WHERE t.tags->>'amenity'='restaurant'"
   },
   'nwr[amenity=restaurant][cuisine]': {
+    'bboxquery': {
+      expectedElements: 2
+    },
     'tags': "SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM postpass_pointlinepolygon t WHERE t.tags->>'amenity'='restaurant' AND t.tags?'cuisine'",
     'tags-members': "SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM postpass_pointlinepolygon t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id WHERE t.tags->>'amenity'='restaurant' AND t.tags?'cuisine'"
   },
   'nwr[amenity=restaurant][cuisine~";"]': {
+    'bboxquery': {
+      expectedElements: 0
+    },
     'tags': "SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM postpass_pointlinepolygon t WHERE t.tags->>'amenity'='restaurant' AND t.tags->>'cuisine'~';'",
     'tags-members': "SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM postpass_pointlinepolygon t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id WHERE t.tags->>'amenity'='restaurant' AND t.tags->>'cuisine'~';'"
   },
   '(nwr[amenity=restaurant];nwr[bar];)': {
+    'bboxquery': {
+      expectedElements: 9
+    },
     'tags': "(SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM postpass_pointlinepolygon t WHERE t.tags->>'amenity'='restaurant') UNION (SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM postpass_pointlinepolygon t WHERE t.tags?'bar')",
     'tags-members': "(SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM postpass_pointlinepolygon t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id WHERE t.tags->>'amenity'='restaurant') UNION (SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM postpass_pointlinepolygon t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id WHERE t.tags?'bar')"
   },
   'way(id:4583259,38279772)': {
+    'bboxquery': {
+      expectedElements: 2
+    },
     'tags': "SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t WHERE osm_id = ANY('{4583259,38279772}')",
     'tags-members': "SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id WHERE osm_id = ANY('{4583259,38279772}')"
   },
   'way[highway](4583259)': {
+    'bboxquery': {
+      expectedElements: 1
+    },
     'tags': "SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t WHERE t.tags?'highway' AND osm_id = ANY('{4583259}')",
     'tags-members': "SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id WHERE t.tags?'highway' AND osm_id = ANY('{4583259}')"
   },
@@ -124,13 +142,13 @@ describe('DBTypePostpass', function () {
   })
 
   describe('BBoxQuery', function () {
-      this.timeout(5000)
     Object.entries(queryList).forEach(([query, def]) => {
       if (def.bboxquery === false) {
         return
       }
 
       it(query, function (done) {
+        geowiki.clearCache()
         geowiki.BBoxQuery(
           query,
           { minlat: 48.19, maxlat: 48.20, minlon: 16.33, maxlon: 16.34 },
@@ -143,7 +161,13 @@ describe('DBTypePostpass', function () {
 
           },
           (err, result) => {
-            console.log(JSON.stringify(result, null, '  '))
+            if (def.bboxquery) {
+              if ('expectedElements' in def.bboxquery) {
+                assert.equal(result.elements.length, def.bboxquery.expectedElements)
+              }
+            } else {
+              console.log(JSON.stringify(result, null, '  '))
+            }
             done(err)
           }
         )
