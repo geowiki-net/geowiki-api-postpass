@@ -231,6 +231,8 @@ function convertToOSMJSON (data) {
     if (item.type === 'node' && feature.geometry && feature.geometry.type === 'Point') {
       item.lat = feature.geometry.coordinates[1]
       item.lon = feature.geometry.coordinates[0]
+    } else if (feature.geometry) {
+      item.geometry = feature.geometry
     }
 
     if (item.type === 'way' && feature.nodes) {
