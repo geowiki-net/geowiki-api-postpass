@@ -1,4 +1,5 @@
 const assert = require('assert')
+const async = require('async')
 const BoundingBox = require('boundingbox')
 
 const Filter = require('@geowiki-net/geowiki-api/src/Filter')
@@ -167,6 +168,8 @@ describe('DBTypePostpass', function () {
 
           },
           (err, result) => {
+            if (err) { return done(err) }
+
             if (def.bboxquery) {
               if ('expectedElements' in def.bboxquery) {
                 assert.equal(result.elements.length, def.bboxquery.expectedElements)
@@ -174,10 +177,45 @@ describe('DBTypePostpass', function () {
             } else {
               console.log(JSON.stringify(result, null, '  '))
             }
-            done(err)
+
+            done()
           }
         )
       })
+    })
+  })
+
+  describe('further tests', function () {
+    it('Simultaneous requests', function (done) {
+      geowiki.clearCache()
+      async.parallel([
+        done => geowiki.BBoxQuery(
+          'node[amenity=restaurant]',
+          { minlat: 48.19, maxlat: 48.20, minlon: 16.33, maxlon: 16.34 },
+          {
+            out: 'json',
+            outOptions: 'tags'
+          },
+          (err, result) => {
+            if (err) { return done(err) }
+            assert.equal(result.elements.length, 7)
+            done()
+          }
+        ),
+        done => geowiki.BBoxQuery(
+          'way[highway=residential]',
+          { minlat: 48.19, maxlat: 48.20, minlon: 16.33, maxlon: 16.34 },
+          {
+            out: 'json',
+            outOptions: 'tags'
+          },
+          (err, result) => {
+            if (err) { return done(err) }
+            assert.equal(result.elements.length, 22)
+            done()
+          }
+        )
+      ], (err) => done(err))
     })
   })
 })

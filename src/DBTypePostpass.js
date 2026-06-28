@@ -31,6 +31,11 @@ class DBTypePostpass {
     const stmt = query.getStatement()
 
     let result = this.compileStmt(stmt, options)
+
+    if ('requestId' in options) {
+      result.select += ', ' + options.requestId + ' as "rid"'
+    }
+
     if (options.bounds) {
       result.where.push('geom && st_setsrid(st_makebox2d(st_makepoint(' + options.bounds.minlon + ',' + options.bounds.minlat + '), st_makepoint(' + options.bounds.maxlon + ',' + options.bounds.maxlat + ')), 4326)')
     }
@@ -198,8 +203,16 @@ function convertToOSMJSON (data) {
     timestamp: data.postpass_properties.timestamp,
     elements: []
   }
+  let statementId = false
 
   data.features.forEach(feature => {
+    if (statementId === false) {
+      statementId = feature.properties.rid
+    } else if (feature.properties.rid !== statementId) {
+      result.elements.push({ type: 'count' })
+      statementId = feature.properties.rid
+    }
+
     const item = {
       id: feature.properties.osm_id,
       type: typePostToOSM[feature.properties.osm_type]
