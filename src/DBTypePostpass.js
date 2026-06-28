@@ -1,10 +1,5 @@
 const GeowikiAPI = require('@geowiki-net/geowiki-api')
 
-const postOp = {
-  '=': '=',
-  '~': '~',
-}
-
 const typePostToOSM = { N: 'node', W: 'way', R: 'relation' }
 const typeOSMToPost = { node: 'N', way: 'W', relation: 'R' }
 
@@ -13,6 +8,17 @@ const tables = {
   node: 'postpass_point',
   way: "(SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W')",
   relation: "(SELECT osm_id, osm_type, tags, geom FROM postpass_pointlinepolygon WHERE osm_type='R')"
+}
+
+const compileFunctions = {
+  bbox: (filter) => 'geom && st_setsrid(st_makebox2d(st_makepoint(' + filter.value.minlon + ',' + filter.value.minlat + '), st_makepoint(' + filter.value.maxlon + ',' + filter.value.maxlat + ')), 4326)',
+  id: (filter) => 'osm_id = ANY(\'{' + filter.value.join(',') + '}\')',
+  properties: (filter) => null,
+}
+const compileOperators = {
+  '=': '=',
+  '~': '~',
+  has_key: (filter) => 't.tags?' + quote(filter.key)
 }
 
 class DBTypePostpass {
@@ -93,14 +99,10 @@ class DBTypePostpass {
 
   compileStmtQuery (stmt) {
     const filters = stmt.filters.map(filter => {
-      if (filter.fun === 'id') {
-        return 'osm_id = ANY(\'{' + filter.value.join(',') + '}\')'
-      } else if (filter.fun === 'properties') {
-        return null
-      } else if (filter.fun === 'bbox') {
-        return 'geom && st_setsrid(st_makebox2d(st_makepoint(' + filter.value.minlon + ',' + filter.value.minlat + '), st_makepoint(' + filter.value.maxlon + ',' + filter.value.maxlat + ')), 4326)'
+      if (filter.fun) {
+        return compileFunctions[filter.fun](filter)
       } else if (filter.op) {
-        return this.compileOp(filter)
+        return this.compileOperator(filter)
       } else {
         throw new Error("Don't know how to compile filter: " + JSON.stringify(filter))
       }
