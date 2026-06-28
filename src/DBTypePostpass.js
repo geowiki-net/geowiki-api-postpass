@@ -233,6 +233,13 @@ function convertToOSMJSON (data) {
       item.lon = feature.geometry.coordinates[0]
     }
 
+    if (item.type === 'way' && feature.nodes) {
+      item.nodes = feature.nodes
+    }
+    if (item.type === 'relation' && feature.members) {
+      item.members = feature.members
+    }
+
     result.elements.push(item)
   })
 
