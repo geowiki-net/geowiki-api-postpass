@@ -30,7 +30,7 @@ class DBTypePostpass {
   compile (query, options) {
     const stmt = query.getStatement()
 
-    let result = this.compileStmt(stmt, options)
+    let result = compileSelect(this.compileStmt(stmt, options))
     if (options.bounds) {
       result = 'SELECT * FROM (' + result + ') WHERE geom && st_setsrid(st_makebox2d(st_makepoint(' + options.bounds.minlon + ',' + options.bounds.minlat + '), st_makepoint(' + options.bounds.maxlon + ',' + options.bounds.maxlat + ')), 4326)'
     }
@@ -67,7 +67,34 @@ class DBTypePostpass {
       case 'FilterQuery':
         return this.compileFilterQuery(stmt, options)
       case 'FilterOr':
-        return '(' + stmt.parts.map(part => this.compileStmt(part, options)).join(') UNION (') + ')'
+        const parts = stmt.parts.map(part => this.compileStmt(part, options))
+
+        let result = [parts.shift()]
+        result[0].where = [result[0].where]
+        parts.forEach(part => {
+          if (!result.some(r => {
+            if (r.table === part.table) {
+              r.where.push(part.where)
+              return true
+            }
+          })) {
+            part.where = [part.where]
+            result.push(part)
+          }
+        })
+
+        result.forEach(r => {
+          r.where = '(' + r.where.map(w => '(' + w + ')').join(' OR ') + ')'
+        })
+
+        if (result.length > 1) {
+          return {
+            select: '*',
+            table: '(' + result.map(r => compileSelect(r)).join(' UNION ') + ')'
+          }
+        } else {
+          return result[0]
+        }
       default:
         throw new Error("Can't compile filter type '" + stmt.constructor.name + "'")
     }
@@ -94,7 +121,11 @@ class DBTypePostpass {
 
     const where = this.compileStmtQuery(stmt)
 
-    return 'SELECT ' + fields.join(', ') + ' FROM ' + table + (where ? ' WHERE ' + where : '')
+    return {
+      select: fields.join(', '),
+      table,
+      where
+    }
   }
 
   compileStmtQuery (stmt) {
@@ -167,6 +198,15 @@ function convertToOSMJSON (data) {
 
     result.elements.push(item)
   })
+
+  return result
+}
+
+function compileSelect (def) {
+  let result = 'SELECT ' + def.select + ' FROM ' + def.table
+  if (def.where) {
+    result += ' WHERE ' + def.where
+  }
 
   return result
 }
