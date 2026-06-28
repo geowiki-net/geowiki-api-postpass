@@ -181,6 +181,10 @@ class DBTypePostpass {
         global.setTimeout(() => callback(err), 0)
       })
   }
+
+  mergeQueries (queries) {
+    return queries.join('\nUNION ALL\n')
+  }
 }
 
 function quote (str) {
