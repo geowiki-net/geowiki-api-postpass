@@ -56,6 +56,12 @@ class DBTypePostpass {
       })
     }
 
+    if ('split' in options && options.split > 0) {
+      result.limit = options.split
+    } else if ('effortSplit' in options) {
+      result.limit = options.effortSplit
+    }
+
     return compileSelect(result)
   }
 
@@ -237,6 +243,10 @@ function compileSelect (def) {
   let result = 'SELECT ' + def.select + ' FROM ' + def.table
   if (def.where && def.where.length) {
     result += ' WHERE ' + def.where.join(' AND ')
+  }
+
+  if (def.limit) {
+    result = '(' + result + ' LIMIT ' + def.limit + ')'
   }
 
   return result
