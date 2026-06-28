@@ -142,18 +142,17 @@ class DBTypePostpass {
     return filters
   }
 
-  compileOp (filter) {
-    const column = 't.tags->>' + quote(filter.key)
-    const value = filter.value ? quote(filter.value) : null
-
-    switch (filter.op) {
-      case 'has_key':
-        return 't.tags?' + quote(filter.key)
-      default:
-        if (!(filter.op in postOp)) {
-          throw new Error("Can't compile operator '" + filter.op + "'")
-        }
-        return column + postOp[filter.op] + value
+  compileOperator (filter) {
+    if (filter.op in compileOperators) {
+      if (typeof compileOperators[filter.op] === 'function') {
+        return compileOperators[filter.op](filter)
+      } else {
+        const column = 't.tags->>' + quote(filter.key)
+        const value = filter.value ? quote(filter.value) : null
+        return column + compileOperators[filter.op] + value
+      }
+    } else {
+      throw new Error("Can't compile operator '" + filter.op + "'")
     }
   }
 
