@@ -30,9 +30,9 @@ class DBTypePostpass {
   compile (query, options) {
     const stmt = query.getStatement()
 
-    let result = compileSelect(this.compileStmt(stmt, options))
+    let result = this.compileStmt(stmt, options)
     if (options.bounds) {
-      result = 'SELECT * FROM (' + result + ') WHERE geom && st_setsrid(st_makebox2d(st_makepoint(' + options.bounds.minlon + ',' + options.bounds.minlat + '), st_makepoint(' + options.bounds.maxlon + ',' + options.bounds.maxlat + ')), 4326)'
+      result.where.push('geom && st_setsrid(st_makebox2d(st_makepoint(' + options.bounds.minlon + ',' + options.bounds.minlat + '), st_makepoint(' + options.bounds.maxlon + ',' + options.bounds.maxlat + ')), 4326)')
     }
 
     if (options.doneFeatures) {
@@ -47,15 +47,11 @@ class DBTypePostpass {
 
       const where = []
       Object.entries(donePerType).forEach(([type, ids]) => {
-        where.push('NOT (osm_type=' + quote(typeOSMToPost[type]) + ' AND osm_id = ANY(ARRAY[' + ids.join(',') + ']))')
+        result.where.push('NOT (osm_type=' + quote(typeOSMToPost[type]) + ' AND osm_id = ANY(ARRAY[' + ids.join(',') + ']))')
       })
-
-      if (where.length) {
-        result = 'SELECT * FROM (' + result + ') WHERE ' + where.join(' AND ')
-      }
     }
 
-    return result
+    return compileSelect(result)
   }
 
   compileStmt (stmt, options) {
@@ -90,7 +86,8 @@ class DBTypePostpass {
         if (result.length > 1) {
           return {
             select: '*',
-            table: '(' + result.map(r => compileSelect(r)).join(' UNION ') + ')'
+            table: '(' + result.map(r => compileSelect(r)).join(' UNION ') + ') t',
+            where: []
           }
         } else {
           return result[0]

@@ -71,8 +71,8 @@ const queryList = {
     'tags-members': "SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id WHERE t.tags?'highway' AND osm_id = ANY('{4583259}')"
   },
   '(node[place=continent];way(4583259);)': {
-    'tags': "SELECT * FROM (SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM postpass_point t WHERE ((t.tags->>'place'='continent')) UNION SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t WHERE ((osm_id = ANY('{4583259}'))))",
-    'tags-members': "SELECT * FROM (SELECT t.osm_id, t.osm_type, t.geom, t.tags, '{}'::bigint[] as \"nodes\", '{}'::jsonb as \"members\" FROM postpass_point t WHERE ((t.tags->>'place'='continent')) UNION SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id WHERE ((osm_id = ANY('{4583259}'))))"
+    'tags': "SELECT * FROM (SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM postpass_point t WHERE ((t.tags->>'place'='continent')) UNION SELECT t.osm_id, t.osm_type, t.geom, t.tags FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t WHERE ((osm_id = ANY('{4583259}')))) t",
+    'tags-members': "SELECT * FROM (SELECT t.osm_id, t.osm_type, t.geom, t.tags, '{}'::bigint[] as \"nodes\", '{}'::jsonb as \"members\" FROM postpass_point t WHERE ((t.tags->>'place'='continent')) UNION SELECT t.osm_id, t.osm_type, t.geom, t.tags, w.nodes, r.members FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id WHERE ((osm_id = ANY('{4583259}')))) t"
   }
 }
 
@@ -109,7 +109,10 @@ describe('DBTypePostpass', function () {
           bounds: new BoundingBox({ minlon: 1, minlat: 1, maxlon: 2, maxlat: 2 })
         })
 
-        assert.equal(result, 'SELECT * FROM (' + def.tags + ') WHERE geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)')
+        const expected = def.tags +
+          (def.tags.match(/ (r\.id|t)$/) ? ' WHERE' : ' AND') +
+          ' geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)'
+        assert.equal(result, expected)
       })
     })
   })
@@ -136,7 +139,10 @@ describe('DBTypePostpass', function () {
           bounds: new BoundingBox({ minlon: 1, minlat: 1, maxlon: 2, maxlat: 2 })
         })
 
-        assert.equal(result, 'SELECT * FROM (' + def['tags-members'] + ') WHERE geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)')
+        const expected = def['tags-members'] +
+          (def['tags-members'].match(/ (r\.id|t)$/) ? ' WHERE' : ' AND') +
+          ' geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)'
+        assert.equal(result, expected)
       })
     })
   })
