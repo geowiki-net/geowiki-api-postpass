@@ -1,4 +1,5 @@
 const GeowikiAPI = require('@geowiki-net/geowiki-api')
+const geojson2elements = require('@geowiki-net/geowiki-api/src/geojson2elements')
 
 const typePostToOSM = { N: 'node', W: 'way', R: 'relation' }
 const typeOSMToPost = { node: 'N', way: 'W', relation: 'R' }
@@ -219,20 +220,21 @@ function convertToOSMJSON (data) {
       statementId = feature.properties.rid
     }
 
-    const item = {
-      id: feature.properties.osm_id,
-      type: typePostToOSM[feature.properties.osm_type]
+    const elements = []
+    geojson2elements(feature, elements, {})
+
+    if (elements.length > 1) {
+      console.log('warning, parsed to ' + elements.length + ' items')
     }
+
+    const item = elements[0]
+    item.type = typePostToOSM[feature.properties.osm_type]
+    item.id = feature.properties.osm_id
 
     if ('tags' in feature.properties) {
       item.tags = feature.properties.tags
-    }
-
-    if (item.type === 'node' && feature.geometry && feature.geometry.type === 'Point') {
-      item.lat = feature.geometry.coordinates[1]
-      item.lon = feature.geometry.coordinates[0]
-    } else if (feature.geometry) {
-      item.geometry = feature.geometry
+    } else {
+      delete(item.tags)
     }
 
     if (item.type === 'way' && feature.nodes) {
