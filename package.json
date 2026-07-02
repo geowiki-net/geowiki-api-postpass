@@ -6,9 +6,12 @@
   "directories": {
     "test": "test"
   },
+  "browser": {
+    "./test/src/loadFile.js": "test/src/loadFile-browser.js"
+  },
   "scripts": {
     "test": "mocha --bail",
-    "watch-test": "watchify --debug test/*.js -o dist/test.js -v"
+    "watch-test": "watchify --debug test/00initialize.js test/objectStructure.js -o dist/test.js -v"
   },
   "repository": {
     "type": "git",
