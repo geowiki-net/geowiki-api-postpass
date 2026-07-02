@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha --bail"
+    "test": "mocha --bail",
+    "watch-test": "watchify --debug test/*.js -o dist/test.js -v"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "@geowiki-net/geowiki-api": "github:geowiki-net/geowiki-api#postpass"
   },
   "devDependencies": {
-    "mocha": "^11.7.6"
+    "mocha": "^11.7.6",
+    "watchify": "^4.0.0"
   }
 }
