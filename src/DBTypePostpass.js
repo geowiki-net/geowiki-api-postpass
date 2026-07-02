@@ -237,11 +237,11 @@ function convertToOSMJSON (data) {
       delete(item.tags)
     }
 
-    if (item.type === 'way' && feature.nodes) {
-      item.nodes = feature.nodes
+    if (item.type === 'way' && feature.properties.nodes) {
+      item.nodes = feature.properties.nodes
     }
-    if (item.type === 'relation' && feature.members) {
-      item.members = feature.members
+    if (item.type === 'relation' && feature.properties.members) {
+      item.members = feature.properties.members
     }
 
     result.elements.push(item)
