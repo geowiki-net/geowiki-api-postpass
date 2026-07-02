@@ -1,0 +1,15 @@
+{
+  "type": "node",
+  "id": 647991,
+  "tags": {
+    "bus": "yes",
+    "name": "Bahnhofstraße",
+    "highway": "bus_stop",
+    "network": "VOR",
+    "railway": "tram_stop",
+    "wheelchair": "yes",
+    "public_transport": "stop_position"
+  },
+  "lat": 48.201554,
+  "lon": 16.2623007
+}

@@ -1,0 +1,10 @@
+{
+  "type": "way",
+  "id": 86282062,
+  "tags": {
+    "name": "Westbahnhof",
+    "source": "Yahoo",
+    "railway": "subway_entrance",
+    "building": "yes"
+  }
+}
