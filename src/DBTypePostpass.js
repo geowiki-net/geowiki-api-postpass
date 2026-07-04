@@ -210,14 +210,11 @@ function convertToOSMJSON (data) {
     timestamp: data.postpass_properties.timestamp,
     elements: []
   }
-  let statementId = false
+  let statementId = 0
 
   data.features.forEach(feature => {
-    if (statementId === false) {
-      statementId = feature.properties.rid
-    } else if (feature.properties.rid !== statementId) {
+    for (; statementId < feature.properties.rid; statementId++) {
       result.elements.push({ type: 'count' })
-      statementId = feature.properties.rid
     }
 
     const elements = []
