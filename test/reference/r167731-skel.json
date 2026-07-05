@@ -1,0 +1,16 @@
+{
+  "type": "relation",
+  "id": 167731,
+  "members": [
+    {
+      "ref": 37337537,
+      "type": "W",
+      "role": "outer"
+    },
+    {
+      "ref": 37337538,
+      "type": "W",
+      "role": "inner"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "type": "relation",
+  "id": 3237099,
+  "members": [
+    {
+      "ref": 31254026,
+      "type": "W",
+      "role": "outer"
+    },
+    {
+      "ref": 239992354,
+      "type": "W",
+      "role": "outer"
+    },
+    {
+      "ref": 43019950,
+      "type": "W",
+      "role": "outer"
+    },
+    {
+      "ref": 240006043,
+      "type": "W",
+      "role": "outer"
+    }
+  ]
+}

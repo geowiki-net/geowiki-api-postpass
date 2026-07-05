@@ -1,5 +1,5 @@
 const GeowikiAPI = require('@geowiki-net/geowiki-api')
-const geojson2elements = require('@geowiki-net/geowiki-api/src/geojson2elements')
+const geojson2element = require('./geojson2element')
 
 const typePostToOSM = { N: 'node', W: 'way', R: 'relation' }
 const typeOSMToPost = { node: 'N', way: 'W', relation: 'R' }
@@ -26,6 +26,8 @@ class DBTypePostpass {
   constructor (url, options) {
     this.url = url
     this.options = options
+
+    this.separateSkelGeom = true
   }
 
   compile (query, options) {
@@ -217,14 +219,8 @@ function convertToOSMJSON (data) {
       result.elements.push({ type: 'count' })
     }
 
-    const elements = []
-    geojson2elements(feature, elements, {})
+    const item = geojson2element(feature, {})
 
-    if (elements.length > 1) {
-      console.log('warning, parsed to ' + elements.length + ' items')
-    }
-
-    const item = elements[0]
     item.type = typePostToOSM[feature.properties.osm_type]
     item.id = feature.properties.osm_id
 
@@ -238,6 +234,9 @@ function convertToOSMJSON (data) {
       item.nodes = feature.properties.nodes
     }
     if (item.type === 'relation' && feature.properties.members) {
+      if (item.members) {
+        item.geometry = item.members
+      }
       item.members = feature.properties.members
     }
 
