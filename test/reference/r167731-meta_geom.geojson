@@ -1,0 +1,23 @@
+{
+  "type": "Feature",
+  "geometry": null,
+  "id": "relation/167731",
+  "properties": {
+    "@id": "relation/167731",
+    "@meta:version": 0.6,
+    "@meta:generator": "Postpass API 0.2",
+    "@meta:timestamp": "",
+    "@members": [
+      {
+        "type": "W",
+        "ref": 37337537,
+        "role": "outer"
+      },
+      {
+        "type": "W",
+        "ref": 37337538,
+        "role": "inner"
+      }
+    ]
+  }
+}

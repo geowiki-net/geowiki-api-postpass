@@ -1,0 +1,22 @@
+{
+  "type": "Feature",
+  "geometry": null,
+  "id": "way/4789279",
+  "properties": {
+    "@id": "way/4789279",
+    "@members": [
+      {
+        "type": "node",
+        "ref": 277973070
+      },
+      {
+        "type": "node",
+        "ref": 3822788355
+      },
+      {
+        "type": "node",
+        "ref": 30486722
+      }
+    ]
+  }
+}

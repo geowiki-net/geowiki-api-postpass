@@ -1,0 +1,45 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        16.3369359,
+        48.1957903
+      ],
+      [
+        16.3361816,
+        48.1955357
+      ],
+      [
+        16.3361494,
+        48.1955248
+      ]
+    ]
+  },
+  "id": "way/4789279",
+  "properties": {
+    "@id": "way/4789279",
+    "name": "Langauergasse",
+    "oneway": "yes",
+    "source": "wien.at",
+    "highway": "residential",
+    "maxspeed": "30",
+    "source:maxspeed": "AT:zone:30",
+    "vehicle:conditional": "destination @ (Mo-Su 23:00-06:00)",
+    "@members": [
+      {
+        "type": "node",
+        "ref": 277973070
+      },
+      {
+        "type": "node",
+        "ref": 3822788355
+      },
+      {
+        "type": "node",
+        "ref": 30486722
+      }
+    ]
+  }
+}

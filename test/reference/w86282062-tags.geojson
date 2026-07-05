@@ -1,0 +1,12 @@
+{
+  "type": "Feature",
+  "geometry": null,
+  "id": "way/86282062",
+  "properties": {
+    "@id": "way/86282062",
+    "name": "Westbahnhof",
+    "source": "Yahoo",
+    "railway": "subway_entrance",
+    "building": "yes"
+  }
+}

@@ -1,0 +1,14 @@
+<way id="86282062">
+  <bounds minlat="48.1955274" minlon="16.3382645" maxlat="48.1957318" maxlon="16.3386293"/>
+  <nd ref="3735979807" lat="48.1956383" lon="16.3382645"/>
+  <nd ref="3767168100" lat="48.1956127" lon="16.3382825"/>
+  <nd ref="3834588606" lat="48.1955472" lon="16.3383265"/>
+  <nd ref="3767168098" lat="48.1955274" lon="16.3383398"/>
+  <nd ref="3767168101" lat="48.1956266" lon="16.3386293"/>
+  <nd ref="3767168103" lat="48.1957318" lon="16.3385500"/>
+  <nd ref="3735979807" lat="48.1956383" lon="16.3382645"/>
+  <tag k="name" v="Westbahnhof"/>
+  <tag k="source" v="Yahoo"/>
+  <tag k="railway" v="subway_entrance"/>
+  <tag k="building" v="yes"/>
+</way>

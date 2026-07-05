@@ -1,0 +1,14 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      16.3373092,
+      48.2007966
+    ]
+  },
+  "id": "node/378458",
+  "properties": {
+    "@id": "node/378458"
+  }
+}

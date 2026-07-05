@@ -1,0 +1,9 @@
+{
+  "type": "Feature",
+  "geometry": null,
+  "id": "node/378458",
+  "properties": {
+    "@id": "node/378458",
+    "highway": "traffic_signals"
+  }
+}

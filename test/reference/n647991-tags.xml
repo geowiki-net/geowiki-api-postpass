@@ -1,0 +1,9 @@
+<node id="647991">
+  <tag k="bus" v="yes"/>
+  <tag k="name" v="Bahnhofstraße"/>
+  <tag k="highway" v="bus_stop"/>
+  <tag k="network" v="VOR"/>
+  <tag k="railway" v="tram_stop"/>
+  <tag k="wheelchair" v="yes"/>
+  <tag k="public_transport" v="stop_position"/>
+</node>
