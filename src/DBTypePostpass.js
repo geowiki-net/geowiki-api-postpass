@@ -23,11 +23,12 @@ const compileOperators = {
 }
 
 class DBTypePostpass {
-  constructor (url, options) {
+  constructor (url, geowiki, options) {
     this.url = url
+    this.geowiki = geowiki
     this.options = options
 
-    this.separateSkelGeom = true
+    this.geowiki.separateSkelGeom = true
   }
 
   compile (query, options) {
