@@ -36,7 +36,7 @@ describe('get specific map item to check object structure (JSON)', function () {
           )
         }, (err, {expected, actual}) => {
           if (err) { return done(err) }
-          assert.deepEqual(expected, actual)
+          assert.deepEqual(expected, actual, 'Output of item ' + id + ' is wrong')
           done()
         })
       }, (err) => done(err))

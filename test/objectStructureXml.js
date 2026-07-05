@@ -32,13 +32,13 @@ describe('get specific map item to check object structure (XML)', function () {
                 assert.fail('element ' + id + ' not found')
               }
 
-              fs.writeFileSync(file, element)
+              //fs.writeFileSync(file, element)
               done(null, element)
             }
           )
         }, (err, {expected, actual}) => {
           if (err) { return done(err) }
-          assert.equal(expected, actual)
+          assert.equal(expected, actual, 'Output of item ' + id + ' is wrong')
           done()
         })
       }, (err) => done(err))
