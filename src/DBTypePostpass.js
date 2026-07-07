@@ -239,6 +239,10 @@ function convertToOSMJSON (data) {
         item.geometry = item.members
       }
       item.members = feature.properties.members
+
+      if (feature.geometry && item.tags && feature.geometry.type === 'MultiPolygon') {
+        item.tags.type = 'multipolygon'
+      }
     }
 
     result.elements.push(item)

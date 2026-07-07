@@ -40,4 +40,5 @@
     <nd lat="65.8642209" lon="179.9918953"/>
   </geometry>
   <tag k="natural" v="water"/>
+  <tag k="type" v="multipolygon"/>
 </relation>

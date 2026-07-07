@@ -1,0 +1,16 @@
+{
+  "type": "Feature",
+  "geometry": null,
+  "id": "relation/910886",
+  "properties": {
+    "@id": "relation/910886",
+    "to": "Dr. Karl Renner Ring",
+    "ref": "49",
+    "from": "Hütteldorf",
+    "name": "Tram 49: Hütteldorf => Dr. Karl Renner Ring",
+    "route": "tram",
+    "network": "VOR",
+    "operator": "Wiener Linien",
+    "opening_hours": "05:00-00:30"
+  }
+}

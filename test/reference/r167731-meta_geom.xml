@@ -19,4 +19,5 @@
     <nd lat="48.2008151" lon="16.3365666"/>
     <nd lat="48.2012190" lon="16.3364026"/>
   </geometry>
+  <tag k="type" v="multipolygon"/>
 </relation>
