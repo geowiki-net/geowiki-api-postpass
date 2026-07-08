@@ -234,11 +234,11 @@ function convertToOSMJSON (data) {
     if (item.type === 'way' && feature.properties.nodes) {
       item.nodes = feature.properties.nodes
     }
-    if (item.type === 'relation' && feature.properties.members) {
-      if (item.members) {
-        item.geometry = item.members
+    if (item.type === 'relation') {
+      if (feature.properties.members) {
+        item.members = feature.properties.members
       }
-      item.members = feature.properties.members
+      item.databaseGeometry = feature.geometry
 
       if (feature.geometry && item.tags && feature.geometry.type === 'MultiPolygon') {
         item.tags.type = 'multipolygon'

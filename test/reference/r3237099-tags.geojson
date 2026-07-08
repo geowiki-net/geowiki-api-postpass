@@ -4,6 +4,7 @@
   "id": "relation/3237099",
   "properties": {
     "@id": "relation/3237099",
-    "natural": "water"
+    "natural": "water",
+    "type": "multipolygon"
   }
 }

@@ -37,7 +37,7 @@ function geojson2element (data, options) {
       } else {
         element = {
           type: 'relation',
-          geometry: elements.map(member => {
+          geometryMembers: elements.map(member => {
             if (member.type === 'relation') {
               if (member.members) {
                 member.members.forEach(memberMember => {

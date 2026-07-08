@@ -1,1 +1,3 @@
-<relation id="167731"/>
+<relation id="167731">
+  <tag k="type" v="multipolygon"/>
+</relation>
