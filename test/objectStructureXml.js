@@ -38,7 +38,7 @@ describe('get specific map item to check object structure (XML)', function () {
           )
         }, (err, {expected, actual}) => {
           if (err) { return done(err) }
-          assert.equal(expected, actual, 'Output of item ' + id + ' is wrong')
+          assert.equal(actual, expected, 'Output of item ' + id + ' is wrong')
           done()
         })
       }, (err) => done(err))
