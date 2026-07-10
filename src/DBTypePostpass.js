@@ -236,10 +236,26 @@ function convertToOSMJSON (data) {
       if (feature.properties.members) {
         item.members = feature.properties.members
       }
-      item.databaseGeometry = feature.geometry
 
       if (feature.geometry && item.tags && feature.geometry.type === 'MultiPolygon') {
         item.tags.type = 'multipolygon'
+      }
+
+      if (feature.geometry.type === 'MultiPolygon' && feature.geometry.coordinates.length === 1) {
+        feature.geometry.type = 'Polygon'
+        feature.geometry.coordinates = feature.geometry.coordinates[0]
+      } else if (feature.geometry.type === 'MultiLineString' && feature.geometry.coordinates.length === 1) {
+        feature.geometry.type = 'LineString'
+        feature.geometry.coordinates = feature.geometry.coordinates[0]
+      }
+
+      item.databaseGeometry = {
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          properties: {},
+          geometry: feature.geometry
+        }]
       }
     }
 
