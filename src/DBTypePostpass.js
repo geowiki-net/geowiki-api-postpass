@@ -169,10 +169,12 @@ class DBTypePostpass {
   }
 
   execute (context, callback) {
-    console.log(context.query)
+    const query =
+      context.subRequests.map(c => c.query).join('\nUNION ALL\n')
+
     fetch(this.url + '/interpreter', {
       method: 'POST',
-      body: new URLSearchParams({data: context.query})
+      body: new URLSearchParams({data: query})
     })
       .then(req => req.text())
       .then(result => {
@@ -195,10 +197,6 @@ class DBTypePostpass {
       .catch(err => {
         global.setTimeout(() => callback(err), 0)
       })
-  }
-
-  mergeQueries (queries) {
-    return queries.join('\nUNION ALL\n')
   }
 }
 
