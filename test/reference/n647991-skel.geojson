@@ -1,12 +1,6 @@
 {
   "type": "Feature",
-  "geometry": {
-    "type": "Point",
-    "coordinates": [
-      16.2623007,
-      48.201554
-    ]
-  },
+  "geometry": null,
   "id": "node/647991",
   "properties": {
     "@id": "node/647991"

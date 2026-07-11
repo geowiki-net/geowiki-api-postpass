@@ -114,8 +114,12 @@ class DBTypePostpass {
 
   compileFilterQuery (stmt, options) {
     // postpass queries always require geom
-    const fields = ['t.osm_id', 't.osm_type', 't.geom']
+    const fields = ['t.osm_id', 't.osm_type']
     let table = tables[stmt.type] + ' t'
+
+    if (options.properties & GeowikiAPI.GEOM) {
+      fields.push('t.geom')
+    }
 
     if (options.properties & GeowikiAPI.TAGS) {
       fields.push('t.tags')

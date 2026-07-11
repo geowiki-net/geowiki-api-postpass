@@ -3,7 +3,6 @@
   "geometry": null,
   "id": "relation/167731",
   "properties": {
-    "@id": "relation/167731",
-    "type": "multipolygon"
+    "@id": "relation/167731"
   }
 }

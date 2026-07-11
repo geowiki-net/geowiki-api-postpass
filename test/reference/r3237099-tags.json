@@ -2,7 +2,6 @@
   "type": "relation",
   "id": 3237099,
   "tags": {
-    "natural": "water",
-    "type": "multipolygon"
+    "natural": "water"
   }
 }
