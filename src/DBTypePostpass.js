@@ -174,7 +174,7 @@ class DBTypePostpass {
 
     fetch(this.url + '/interpreter', {
       method: 'POST',
-      body: new URLSearchParams({data: query})
+      body: new URLSearchParams({data: query, 'options[geojson]': false })
     })
       .then(req => req.text())
       .then(result => {
@@ -213,49 +213,54 @@ function convertToOSMJSON (data) {
   }
   let statementId = 0
 
-  data.features.forEach(feature => {
-    for (; statementId < feature.properties.rid; statementId++) {
+  data.result.forEach(feature => {
+    for (; statementId < feature.rid; statementId++) {
       result.elements.push({ type: 'count' })
     }
 
-    const item = geojson2element(feature, {})
+    if (feature.geom) {
+      delete feature.geom.crs
+    }
+    const item = geojson2element({ type: 'Feature', properties: { osm_id: feature.osm_id, osm_type: feature.osm_type }, geometry: feature.geom }, {})
 
-    item.type = typePostToOSM[feature.properties.osm_type]
-    item.id = feature.properties.osm_id
+    item.type = typePostToOSM[feature.osm_type]
+    item.id = feature.osm_id
 
-    if ('tags' in feature.properties) {
-      item.tags = feature.properties.tags
+    if ('tags' in feature) {
+      item.tags = feature.tags
     } else {
       delete(item.tags)
     }
 
-    if (item.type === 'way' && feature.properties.nodes) {
-      item.nodes = feature.properties.nodes
+    if (item.type === 'way' && feature.nodes) {
+      item.nodes = feature.nodes
     }
     if (item.type === 'relation') {
-      if (feature.properties.members) {
-        item.members = feature.properties.members
+      if (feature.members) {
+        item.members = feature.members
       }
 
-      if (feature.geometry && item.tags && feature.geometry.type === 'MultiPolygon') {
+      if (feature.geom && item.tags && feature.geom.type === 'MultiPolygon') {
         item.tags.type = 'multipolygon'
       }
 
-      if (feature.geometry.type === 'MultiPolygon' && feature.geometry.coordinates.length === 1) {
-        feature.geometry.type = 'Polygon'
-        feature.geometry.coordinates = feature.geometry.coordinates[0]
-      } else if (feature.geometry.type === 'MultiLineString' && feature.geometry.coordinates.length === 1) {
-        feature.geometry.type = 'LineString'
-        feature.geometry.coordinates = feature.geometry.coordinates[0]
+      if (feature.geom && feature.geom.type === 'MultiPolygon' && feature.geom.coordinates.length === 1) {
+        feature.geom.type = 'Polygon'
+        feature.geom.coordinates = feature.geom.coordinates[0]
+      } else if (feature.geom && feature.geom.type === 'MultiLineString' && feature.geom.coordinates.length === 1) {
+        feature.geom.type = 'LineString'
+        feature.geom.coordinates = feature.geom.coordinates[0]
       }
 
-      item.databaseGeometry = {
-        type: 'FeatureCollection',
-        features: [{
-          type: 'Feature',
-          properties: {},
-          geometry: feature.geometry
-        }]
+      if (feature.geom) {
+        item.databaseGeometry = {
+          type: 'FeatureCollection',
+          features: [{
+            type: 'Feature',
+            properties: {},
+            geometry: feature.geom
+          }]
+        }
       }
     }
 

@@ -8,6 +8,10 @@ function geojson2element (data, options) {
   let element
   const osm_type = data.properties.osm_type
 
+  if (!data.geometry) {
+    return {}
+  }
+
   switch (data.geometry.type) {
     case 'Point':
       element = {
