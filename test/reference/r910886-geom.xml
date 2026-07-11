@@ -1,4 +1,5 @@
 <relation id="910886">
+  <bounds minlat="48.1968029" minlon="16.2551849" maxlat="48.2068734" maxlon="16.3599928"/>
   <member type="N" ref="430450314" role="stop"/>
   <member type="N" ref="2711859002" role="stop"/>
   <member type="N" ref="647991" role="stop"/>
@@ -65,7 +66,7 @@
   <member type="W" ref="25585540" role=""/>
   <member type="W" ref="384007081" role=""/>
   <member type="W" ref="25498436" role=""/>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2015196" lon="16.2624422"/>
     <nd lat="48.2014955" lon="16.2624340"/>
     <nd lat="48.2015159" lon="16.2623081"/>
@@ -81,7 +82,7 @@
     <nd lat="48.2015965" lon="16.2619568"/>
     <nd lat="48.2015196" lon="16.2624422"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1987844" lon="16.3061911"/>
     <nd lat="48.1989054" lon="16.3067886"/>
     <nd lat="48.1989018" lon="16.3068040"/>
@@ -94,11 +95,11 @@
     <nd lat="48.1987733" lon="16.3061978"/>
     <nd lat="48.1987844" lon="16.3061911"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1989978" lon="16.3121931"/>
     <nd lat="48.1989939" lon="16.3116635"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1990219" lon="16.3192352"/>
     <nd lat="48.1989813" lon="16.3196954"/>
     <nd lat="48.1989750" lon="16.3197906"/>
@@ -115,18 +116,18 @@
     <nd lat="48.1990098" lon="16.3192337"/>
     <nd lat="48.1990219" lon="16.3192352"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1980134" lon="16.3250907"/>
     <nd lat="48.1978760" lon="16.3251712"/>
     <nd lat="48.1978413" lon="16.3251888"/>
     <nd lat="48.1978037" lon="16.3252073"/>
     <nd lat="48.1977300" lon="16.3252394"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1986490" lon="16.3296360"/>
     <nd lat="48.1983927" lon="16.3287182"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2022248" lon="16.3513057"/>
     <nd lat="48.2022216" lon="16.3513951"/>
     <nd lat="48.2022165" lon="16.3514613"/>
@@ -134,7 +135,7 @@
     <nd lat="48.2022032" lon="16.3515898"/>
     <nd lat="48.2021955" lon="16.3516483"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2068551" lon="16.3594196"/>
     <nd lat="48.2068536" lon="16.3594500"/>
     <nd lat="48.2068512" lon="16.3594774"/>
@@ -163,11 +164,11 @@
     <nd lat="48.2068734" lon="16.3594216"/>
     <nd lat="48.2068551" lon="16.3594196"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2030786" lon="16.2556354"/>
     <nd lat="48.2029298" lon="16.2554123"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2029298" lon="16.2554123"/>
     <nd lat="48.2028625" lon="16.2553135"/>
     <nd lat="48.2028349" lon="16.2552735"/>
@@ -175,7 +176,7 @@
     <nd lat="48.2028034" lon="16.2552347"/>
     <nd lat="48.2027885" lon="16.2552201"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2027885" lon="16.2552201"/>
     <nd lat="48.2027741" lon="16.2552074"/>
     <nd lat="48.2027609" lon="16.2551998"/>
@@ -190,7 +191,7 @@
     <nd lat="48.2026285" lon="16.2552086"/>
     <nd lat="48.2026151" lon="16.2552201"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2026151" lon="16.2552201"/>
     <nd lat="48.2026007" lon="16.2552360"/>
     <nd lat="48.2025794" lon="16.2552628"/>
@@ -232,7 +233,7 @@
     <nd lat="48.2016660" lon="16.2616671"/>
     <nd lat="48.2016559" lon="16.2617154"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2016559" lon="16.2617154"/>
     <nd lat="48.2016312" lon="16.2618357"/>
     <nd lat="48.2016035" lon="16.2619887"/>
@@ -240,7 +241,7 @@
     <nd lat="48.2015275" lon="16.2624789"/>
     <nd lat="48.2014928" lon="16.2626777"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2007624" lon="16.2652641"/>
     <nd lat="48.2008874" lon="16.2649215"/>
     <nd lat="48.2009433" lon="16.2647606"/>
@@ -253,7 +254,7 @@
     <nd lat="48.2014762" lon="16.2627478"/>
     <nd lat="48.2014928" lon="16.2626777"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1995371" lon="16.2689880"/>
     <nd lat="48.1995577" lon="16.2688862"/>
     <nd lat="48.1996908" lon="16.2682154"/>
@@ -272,40 +273,40 @@
     <nd lat="48.2006350" lon="16.2655976"/>
     <nd lat="48.2007624" lon="16.2652641"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1993975" lon="16.2696906"/>
     <nd lat="48.1994121" lon="16.2696169"/>
     <nd lat="48.1994848" lon="16.2692516"/>
     <nd lat="48.1995371" lon="16.2689880"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1992191" lon="16.2705886"/>
     <nd lat="48.1993252" lon="16.2700562"/>
     <nd lat="48.1993975" lon="16.2696906"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1992191" lon="16.2705886"/>
     <nd lat="48.1991898" lon="16.2707379"/>
     <nd lat="48.1991058" lon="16.2711590"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1990537" lon="16.2714168"/>
     <nd lat="48.1990913" lon="16.2712372"/>
     <nd lat="48.1991058" lon="16.2711590"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1990537" lon="16.2714168"/>
     <nd lat="48.1990033" lon="16.2717967"/>
     <nd lat="48.1989637" lon="16.2720002"/>
     <nd lat="48.1989343" lon="16.2721580"/>
     <nd lat="48.1987930" lon="16.2728211"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1987930" lon="16.2728211"/>
     <nd lat="48.1987907" lon="16.2728354"/>
     <nd lat="48.1987321" lon="16.2731036"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1987321" lon="16.2731036"/>
     <nd lat="48.1986577" lon="16.2734445"/>
     <nd lat="48.1981869" lon="16.2756339"/>
@@ -346,7 +347,7 @@
     <nd lat="48.1989098" lon="16.3067607"/>
     <nd lat="48.1989411" lon="16.3069078"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1989411" lon="16.3069078"/>
     <nd lat="48.1989497" lon="16.3069572"/>
     <nd lat="48.1989573" lon="16.3070104"/>
@@ -402,7 +403,7 @@
     <nd lat="48.1988432" lon="16.3218529"/>
     <nd lat="48.1987658" lon="16.3228265"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1987658" lon="16.3228265"/>
     <nd lat="48.1986580" lon="16.3241552"/>
     <nd lat="48.1986289" lon="16.3245216"/>
@@ -445,12 +446,12 @@
     <nd lat="48.1982737" lon="16.3282400"/>
     <nd lat="48.1983464" lon="16.3285039"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1983464" lon="16.3285039"/>
     <nd lat="48.1985022" lon="16.3290618"/>
     <nd lat="48.1985479" lon="16.3292261"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.1985479" lon="16.3292261"/>
     <nd lat="48.1988475" lon="16.3303049"/>
     <nd lat="48.1992792" lon="16.3318583"/>
@@ -462,18 +463,18 @@
     <nd lat="48.2003417" lon="16.3356818"/>
     <nd lat="48.2004994" lon="16.3362519"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2004994" lon="16.3362519"/>
     <nd lat="48.2005527" lon="16.3364410"/>
     <nd lat="48.2007521" lon="16.3371592"/>
     <nd lat="48.2007770" lon="16.3372510"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2007770" lon="16.3372510"/>
     <nd lat="48.2008044" lon="16.3373515"/>
     <nd lat="48.2008292" lon="16.3374244"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2008292" lon="16.3374244"/>
     <nd lat="48.2008519" lon="16.3374697"/>
     <nd lat="48.2008709" lon="16.3374984"/>
@@ -503,7 +504,7 @@
     <nd lat="48.2017054" lon="16.3387535"/>
     <nd lat="48.2017275" lon="16.3390560"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2017275" lon="16.3390560"/>
     <nd lat="48.2017683" lon="16.3396070"/>
     <nd lat="48.2017868" lon="16.3398811"/>
@@ -513,7 +514,7 @@
     <nd lat="48.2018252" lon="16.3403796"/>
     <nd lat="48.2018260" lon="16.3404090"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2018260" lon="16.3404090"/>
     <nd lat="48.2018283" lon="16.3404567"/>
     <nd lat="48.2018306" lon="16.3405099"/>
@@ -527,7 +528,7 @@
     <nd lat="48.2018202" lon="16.3422273"/>
     <nd lat="48.2018111" lon="16.3431729"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2021562" lon="16.3495354"/>
     <nd lat="48.2021536" lon="16.3493616"/>
     <nd lat="48.2021539" lon="16.3493446"/>
@@ -588,7 +589,7 @@
     <nd lat="48.2018073" lon="16.3436775"/>
     <nd lat="48.2018111" lon="16.3431729"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2022204" lon="16.3507232"/>
     <nd lat="48.2021999" lon="16.3503527"/>
     <nd lat="48.2021923" lon="16.3502017"/>
@@ -597,7 +598,7 @@
     <nd lat="48.2021591" lon="16.3496230"/>
     <nd lat="48.2021562" lon="16.3495354"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2021685" lon="16.3523260"/>
     <nd lat="48.2021664" lon="16.3522325"/>
     <nd lat="48.2021673" lon="16.3520848"/>
@@ -621,7 +622,7 @@
     <nd lat="48.2022305" lon="16.3509093"/>
     <nd lat="48.2022204" lon="16.3507232"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2023558" lon="16.3543992"/>
     <nd lat="48.2023460" lon="16.3542891"/>
     <nd lat="48.2023209" lon="16.3540151"/>
@@ -632,7 +633,7 @@
     <nd lat="48.2021708" lon="16.3523726"/>
     <nd lat="48.2021685" lon="16.3523260"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2030917" lon="16.3571022"/>
     <nd lat="48.2030637" lon="16.3571150"/>
     <nd lat="48.2030413" lon="16.3571214"/>
@@ -662,7 +663,7 @@
     <nd lat="48.2023664" lon="16.3545138"/>
     <nd lat="48.2023558" lon="16.3543992"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2042076" lon="16.3565843"/>
     <nd lat="48.2039475" lon="16.3566973"/>
     <nd lat="48.2037634" lon="16.3567799"/>
@@ -670,7 +671,7 @@
     <nd lat="48.2032189" lon="16.3570247"/>
     <nd lat="48.2030917" lon="16.3571022"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2044491" lon="16.3565897"/>
     <nd lat="48.2044426" lon="16.3565825"/>
     <nd lat="48.2044304" lon="16.3565710"/>
@@ -685,7 +686,7 @@
     <nd lat="48.2042794" lon="16.3565518"/>
     <nd lat="48.2042076" lon="16.3565843"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2059038" lon="16.3592841"/>
     <nd lat="48.2062579" lon="16.3598762"/>
     <nd lat="48.2062797" lon="16.3599038"/>
@@ -703,7 +704,7 @@
     <nd lat="48.2065356" lon="16.3599359"/>
     <nd lat="48.2067554" lon="16.3596565"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2044491" lon="16.3565897"/>
     <nd lat="48.2044671" lon="16.3566126"/>
     <nd lat="48.2044850" lon="16.3566380"/>
@@ -715,13 +716,13 @@
     <nd lat="48.2050120" lon="16.3576555"/>
     <nd lat="48.2050525" lon="16.3577438"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2050525" lon="16.3577438"/>
     <nd lat="48.2050851" lon="16.3578136"/>
     <nd lat="48.2051153" lon="16.3578894"/>
     <nd lat="48.2051707" lon="16.3580251"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="48.2051707" lon="16.3580251"/>
     <nd lat="48.2051933" lon="16.3580773"/>
     <nd lat="48.2052108" lon="16.3581140"/>

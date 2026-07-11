@@ -1,9 +1,10 @@
 <relation id="3237099">
+  <bounds minlat="65.8635488" minlon="-180.0000000" maxlat="65.8660500" maxlon="180.0000000"/>
   <member type="W" ref="31254026" role="outer"/>
   <member type="W" ref="239992354" role="outer"/>
   <member type="W" ref="43019950" role="outer"/>
   <member type="W" ref="240006043" role="outer"/>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="65.8637000" lon="-180.0000000"/>
     <nd lat="65.8637649" lon="-179.9979505"/>
     <nd lat="65.8635833" lon="-179.9913137"/>
@@ -17,7 +18,7 @@
     <nd lat="65.8660500" lon="-180.0000000"/>
     <nd lat="65.8637000" lon="-180.0000000"/>
   </geometry>
-  <geometry type="way" role="outer">
+  <geometry type="way">
     <nd lat="65.8642209" lon="179.9918953"/>
     <nd lat="65.8639992" lon="179.9919931"/>
     <nd lat="65.8638760" lon="179.9926604"/>
