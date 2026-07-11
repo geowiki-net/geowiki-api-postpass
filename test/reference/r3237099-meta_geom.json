@@ -6,9 +6,9 @@
     "type": "multipolygon"
   },
   "bounds": {
-    "minlon": -180,
+    "minlon": 179.9918953,
     "minlat": 65.8635488,
-    "maxlon": 180,
+    "maxlon": -179.9872242,
     "maxlat": 65.86605
   },
   "members": [
