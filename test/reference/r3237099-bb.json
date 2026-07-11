@@ -1,0 +1,35 @@
+{
+  "type": "relation",
+  "id": 3237099,
+  "tags": {
+    "natural": "water"
+  },
+  "bounds": {
+    "minlon": 179.9918953,
+    "minlat": 65.8635488,
+    "maxlon": -179.9872242,
+    "maxlat": 65.86605
+  },
+  "members": [
+    {
+      "ref": 31254026,
+      "type": "W",
+      "role": "outer"
+    },
+    {
+      "ref": 239992354,
+      "type": "W",
+      "role": "outer"
+    },
+    {
+      "ref": 43019950,
+      "type": "W",
+      "role": "outer"
+    },
+    {
+      "ref": 240006043,
+      "type": "W",
+      "role": "outer"
+    }
+  ]
+}

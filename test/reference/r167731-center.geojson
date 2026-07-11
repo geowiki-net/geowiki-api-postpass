@@ -1,0 +1,26 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      16.3366835,
+      48.2010201
+    ]
+  },
+  "id": "relation/167731",
+  "properties": {
+    "@id": "relation/167731",
+    "@members": [
+      {
+        "type": "W",
+        "ref": 37337537,
+        "role": "outer"
+      },
+      {
+        "type": "W",
+        "ref": 37337538,
+        "role": "inner"
+      }
+    ]
+  }
+}

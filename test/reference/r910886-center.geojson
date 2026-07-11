@@ -1,0 +1,354 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      16.3075889,
+      48.2018382
+    ]
+  },
+  "id": "relation/910886",
+  "properties": {
+    "@id": "relation/910886",
+    "to": "Dr. Karl Renner Ring",
+    "ref": "49",
+    "from": "Hütteldorf",
+    "name": "Tram 49: Hütteldorf => Dr. Karl Renner Ring",
+    "route": "tram",
+    "network": "VOR",
+    "operator": "Wiener Linien",
+    "opening_hours": "05:00-00:30",
+    "@members": [
+      {
+        "type": "N",
+        "ref": 430450314,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2711859002,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 647991,
+        "role": "stop"
+      },
+      {
+        "type": "W",
+        "ref": 140549303,
+        "role": "platform"
+      },
+      {
+        "type": "N",
+        "ref": 4076152498,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 1321314195,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2510471049,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2510471157,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2510471164,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2510471122,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2509620147,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2288199703,
+        "role": "stop"
+      },
+      {
+        "type": "W",
+        "ref": 140994821,
+        "role": "platform"
+      },
+      {
+        "type": "N",
+        "ref": 2331960742,
+        "role": "stop"
+      },
+      {
+        "type": "W",
+        "ref": 217210756,
+        "role": "platform"
+      },
+      {
+        "type": "N",
+        "ref": 2293994066,
+        "role": "stop"
+      },
+      {
+        "type": "W",
+        "ref": 122504890,
+        "role": "platform"
+      },
+      {
+        "type": "N",
+        "ref": 2293993868,
+        "role": "stop"
+      },
+      {
+        "type": "W",
+        "ref": 122580876,
+        "role": "platform"
+      },
+      {
+        "type": "N",
+        "ref": 2293993859,
+        "role": "stop"
+      },
+      {
+        "type": "W",
+        "ref": 261111319,
+        "role": "platform"
+      },
+      {
+        "type": "N",
+        "ref": 2293993929,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 79721398,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2293994047,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2287963578,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2296833061,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 2296833114,
+        "role": "stop"
+      },
+      {
+        "type": "W",
+        "ref": 122729040,
+        "role": "platform"
+      },
+      {
+        "type": "N",
+        "ref": 2296833143,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 276171350,
+        "role": "stop"
+      },
+      {
+        "type": "N",
+        "ref": 60676388,
+        "role": "stop"
+      },
+      {
+        "type": "W",
+        "ref": 263063495,
+        "role": "platform"
+      },
+      {
+        "type": "W",
+        "ref": 27999830,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 58993079,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 27999826,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 265532639,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 140549310,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 264935316,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 358479330,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 265532171,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 25585623,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 25585675,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 25585676,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 25585622,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 243573842,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 265532169,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 220270704,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 220270708,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 220270714,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 220270713,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 220270694,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 25585539,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 228707687,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 228707705,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 228707706,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 243702669,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 251518415,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 251518412,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 251518416,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 384007076,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 384007077,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 219652646,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 25452759,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 25585540,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 384007081,
+        "role": ""
+      },
+      {
+        "type": "W",
+        "ref": 25498436,
+        "role": ""
+      }
+    ]
+  }
+}

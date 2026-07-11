@@ -1,0 +1,48 @@
+{
+  "type": "Feature",
+  "geometry": null,
+  "id": "way/86282062",
+  "properties": {
+    "@id": "way/86282062",
+    "name": "Westbahnhof",
+    "source": "Yahoo",
+    "railway": "subway_entrance",
+    "building": "yes",
+    "@members": [
+      {
+        "type": "node",
+        "ref": 3735979807
+      },
+      {
+        "type": "node",
+        "ref": 3767168100
+      },
+      {
+        "type": "node",
+        "ref": 3834588606
+      },
+      {
+        "type": "node",
+        "ref": 3767168098
+      },
+      {
+        "type": "node",
+        "ref": 3767168101
+      },
+      {
+        "type": "node",
+        "ref": 3767168103
+      },
+      {
+        "type": "node",
+        "ref": 3735979807
+      }
+    ]
+  },
+  "bbox": [
+    16.3382645,
+    48.1955274,
+    16.3386293,
+    48.1957318
+  ]
+}

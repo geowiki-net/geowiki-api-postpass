@@ -7,7 +7,7 @@ const loadFile = require('./src/loadFile')
 
 describe('get specific map item to check object structure (GeoJSON)', function () {
   const items = ['n378458', 'n647991', 'w4789279', 'w86282062', 'r167731', 'r3237099', 'r910886'] //, 'r1522329', 'r20313', 'w37337538']
-  const checkProperties = [ 'ids', 'tags', 'skel', 'geom', 'meta geom' ]
+  const checkProperties = [ 'ids', 'bb', 'center', 'tags', 'skel', 'geom', 'meta geom' ]
 
   checkProperties.forEach(outOptions => {
     it('check with out options "' + outOptions + '"', function (done) {

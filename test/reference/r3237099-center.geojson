@@ -1,0 +1,37 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -179.9976645,
+      65.8647994
+    ]
+  },
+  "id": "relation/3237099",
+  "properties": {
+    "@id": "relation/3237099",
+    "natural": "water",
+    "@members": [
+      {
+        "type": "W",
+        "ref": 31254026,
+        "role": "outer"
+      },
+      {
+        "type": "W",
+        "ref": 239992354,
+        "role": "outer"
+      },
+      {
+        "type": "W",
+        "ref": 43019950,
+        "role": "outer"
+      },
+      {
+        "type": "W",
+        "ref": 240006043,
+        "role": "outer"
+      }
+    ]
+  }
+}

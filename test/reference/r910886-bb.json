@@ -1,0 +1,352 @@
+{
+  "type": "relation",
+  "id": 910886,
+  "tags": {
+    "to": "Dr. Karl Renner Ring",
+    "ref": "49",
+    "from": "Hütteldorf",
+    "name": "Tram 49: Hütteldorf => Dr. Karl Renner Ring",
+    "route": "tram",
+    "network": "VOR",
+    "operator": "Wiener Linien",
+    "opening_hours": "05:00-00:30"
+  },
+  "bounds": {
+    "minlon": 16.2551849,
+    "minlat": 48.1968029,
+    "maxlon": 16.3599928,
+    "maxlat": 48.2068734
+  },
+  "members": [
+    {
+      "ref": 430450314,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2711859002,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 647991,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 140549303,
+      "type": "W",
+      "role": "platform"
+    },
+    {
+      "ref": 4076152498,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 1321314195,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2510471049,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2510471157,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2510471164,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2510471122,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2509620147,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2288199703,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 140994821,
+      "type": "W",
+      "role": "platform"
+    },
+    {
+      "ref": 2331960742,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 217210756,
+      "type": "W",
+      "role": "platform"
+    },
+    {
+      "ref": 2293994066,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 122504890,
+      "type": "W",
+      "role": "platform"
+    },
+    {
+      "ref": 2293993868,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 122580876,
+      "type": "W",
+      "role": "platform"
+    },
+    {
+      "ref": 2293993859,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 261111319,
+      "type": "W",
+      "role": "platform"
+    },
+    {
+      "ref": 2293993929,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 79721398,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2293994047,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2287963578,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2296833061,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 2296833114,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 122729040,
+      "type": "W",
+      "role": "platform"
+    },
+    {
+      "ref": 2296833143,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 276171350,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 60676388,
+      "type": "N",
+      "role": "stop"
+    },
+    {
+      "ref": 263063495,
+      "type": "W",
+      "role": "platform"
+    },
+    {
+      "ref": 27999830,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 58993079,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 27999826,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 265532639,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 140549310,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 264935316,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 358479330,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 265532171,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 25585623,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 25585675,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 25585676,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 25585622,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 243573842,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 265532169,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 220270704,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 220270708,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 220270714,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 220270713,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 220270694,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 25585539,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 228707687,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 228707705,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 228707706,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 243702669,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 251518415,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 251518412,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 251518416,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 384007076,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 384007077,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 219652646,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 25452759,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 25585540,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 384007081,
+      "type": "W",
+      "role": ""
+    },
+    {
+      "ref": 25498436,
+      "type": "W",
+      "role": ""
+    }
+  ]
+}

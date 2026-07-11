@@ -1,0 +1,21 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      16.2623007,
+      48.201554
+    ]
+  },
+  "id": "node/647991",
+  "properties": {
+    "@id": "node/647991",
+    "bus": "yes",
+    "name": "Bahnhofstraße",
+    "highway": "bus_stop",
+    "network": "VOR",
+    "railway": "tram_stop",
+    "wheelchair": "yes",
+    "public_transport": "stop_position"
+  }
+}

@@ -1,0 +1,14 @@
+<way id="86282062">
+  <center lat="48.1956296" lon="16.3384469"/>
+  <nd ref="3735979807"/>
+  <nd ref="3767168100"/>
+  <nd ref="3834588606"/>
+  <nd ref="3767168098"/>
+  <nd ref="3767168101"/>
+  <nd ref="3767168103"/>
+  <nd ref="3735979807"/>
+  <tag k="name" v="Westbahnhof"/>
+  <tag k="source" v="Yahoo"/>
+  <tag k="railway" v="subway_entrance"/>
+  <tag k="building" v="yes"/>
+</way>

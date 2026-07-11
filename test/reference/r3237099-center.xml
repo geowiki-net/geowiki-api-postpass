@@ -1,0 +1,8 @@
+<relation id="3237099">
+  <center lat="65.8647994" lon="-179.9976645"/>
+  <member type="W" ref="31254026" role="outer"/>
+  <member type="W" ref="239992354" role="outer"/>
+  <member type="W" ref="43019950" role="outer"/>
+  <member type="W" ref="240006043" role="outer"/>
+  <tag k="natural" v="water"/>
+</relation>

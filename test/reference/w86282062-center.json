@@ -1,0 +1,23 @@
+{
+  "type": "way",
+  "id": 86282062,
+  "tags": {
+    "name": "Westbahnhof",
+    "source": "Yahoo",
+    "railway": "subway_entrance",
+    "building": "yes"
+  },
+  "center": {
+    "lat": 48.1956296,
+    "lon": 16.3384469
+  },
+  "nodes": [
+    3735979807,
+    3767168100,
+    3834588606,
+    3767168098,
+    3767168101,
+    3767168103,
+    3735979807
+  ]
+}

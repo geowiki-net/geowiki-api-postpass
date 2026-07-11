@@ -1,0 +1,37 @@
+{
+  "type": "Feature",
+  "geometry": null,
+  "id": "relation/3237099",
+  "properties": {
+    "@id": "relation/3237099",
+    "natural": "water",
+    "@members": [
+      {
+        "type": "W",
+        "ref": 31254026,
+        "role": "outer"
+      },
+      {
+        "type": "W",
+        "ref": 239992354,
+        "role": "outer"
+      },
+      {
+        "type": "W",
+        "ref": 43019950,
+        "role": "outer"
+      },
+      {
+        "type": "W",
+        "ref": 240006043,
+        "role": "outer"
+      }
+    ]
+  },
+  "bbox": [
+    179.9918953,
+    65.8635488,
+    -179.9872242,
+    65.86605
+  ]
+}

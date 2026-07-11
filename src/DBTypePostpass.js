@@ -119,6 +119,9 @@ class DBTypePostpass {
 
     if (options.properties & GeowikiAPI.GEOM) {
       fields.push('t.geom')
+    } else if (options.properties & (GeowikiAPI.BBOX|GeowikiAPI.CENTER)) {
+      // split multipolygons in west/east parts, so that we can catch geometries spanning lon180
+      fields.push('cast(Box2D(ST_Collect(ARRAY(SELECT g.geom FROM ST_Dump(geom) g WHERE ST_XMin(g.geom) < 0))) as text) bbox_west, cast(Box2D(ST_Collect(ARRAY(SELECT geom FROM ST_Dump(geom) g WHERE ST_XMin(g.geom) >= 0))) as text) bbox_east')
     }
 
     if (options.properties & GeowikiAPI.TAGS) {
@@ -236,6 +239,37 @@ function convertToOSMJSON (data) {
       delete(item.tags)
     }
 
+    if (feature.bbox_west || feature.bbox_east) {
+      const bounds = {
+        east: box2bounds(feature.bbox_east),
+        west: box2bounds(feature.bbox_west)
+      }
+
+      if (bounds.east && bounds.west) {
+        item.bounds = {
+          minlat: Math.min(bounds.east.minlat, bounds.west.minlat),
+          maxlat: Math.max(bounds.east.maxlat, bounds.west.maxlat)
+        }
+
+        if (bounds.east.maxlon - bounds.west.minlon < 360 - bounds.west.maxlon - bounds.east.minlon) {
+          item.bounds.minlon = bounds.east.maxlon
+          item.bounds.maxlon = bounds.west.minlon
+        } else {
+          item.bounds.maxlon = bounds.west.maxlon
+          item.bounds.minlon = bounds.east.minlon
+        }
+      } else {
+        item.bounds = bounds.east || bounds.west
+      }
+    }
+
+    if (item.type === 'node') {
+      if (item.bounds) {
+        item.lat = item.bounds.minlat
+        item.lon = item.bounds.minlon
+        delete item.bounds
+      }
+    }
     if (item.type === 'way' && feature.nodes) {
       item.nodes = feature.nodes
     }
@@ -285,6 +319,20 @@ function compileSelect (def) {
   }
 
   return result
+}
+
+function box2bounds (str) {
+  if (!str) {
+    return null
+  }
+
+  const coords = str.match(/^BOX\((-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)\)$/)
+  return {
+    minlon: parseFloat(coords[1]),
+    minlat: parseFloat(coords[2]),
+    maxlon: parseFloat(coords[3]),
+    maxlat: parseFloat(coords[4])
+  }
 }
 
 GeowikiAPI.registerDBType('postpass', DBTypePostpass)

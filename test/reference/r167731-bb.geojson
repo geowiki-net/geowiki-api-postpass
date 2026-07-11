@@ -1,0 +1,26 @@
+{
+  "type": "Feature",
+  "geometry": null,
+  "id": "relation/167731",
+  "properties": {
+    "@id": "relation/167731",
+    "@members": [
+      {
+        "type": "W",
+        "ref": 37337537,
+        "role": "outer"
+      },
+      {
+        "type": "W",
+        "ref": 37337538,
+        "role": "inner"
+      }
+    ]
+  },
+  "bbox": [
+    16.3362088,
+    48.2006663,
+    16.3371581,
+    48.2013739
+  ]
+}

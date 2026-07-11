@@ -1,0 +1,13 @@
+<way id="4789279">
+  <bounds minlat="48.1955248" minlon="16.3361494" maxlat="48.1957903" maxlon="16.3369359"/>
+  <nd ref="277973070"/>
+  <nd ref="3822788355"/>
+  <nd ref="30486722"/>
+  <tag k="name" v="Langauergasse"/>
+  <tag k="oneway" v="yes"/>
+  <tag k="source" v="wien.at"/>
+  <tag k="highway" v="residential"/>
+  <tag k="maxspeed" v="30"/>
+  <tag k="source:maxspeed" v="AT:zone:30"/>
+  <tag k="vehicle:conditional" v="destination @ (Mo-Su 23:00-06:00)"/>
+</way>

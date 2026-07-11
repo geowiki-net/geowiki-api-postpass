@@ -1,0 +1,77 @@
+<relation id="910886">
+  <bounds minlat="48.1968029" minlon="16.2551849" maxlat="48.2068734" maxlon="16.3599928"/>
+  <member type="N" ref="430450314" role="stop"/>
+  <member type="N" ref="2711859002" role="stop"/>
+  <member type="N" ref="647991" role="stop"/>
+  <member type="W" ref="140549303" role="platform"/>
+  <member type="N" ref="4076152498" role="stop"/>
+  <member type="N" ref="1321314195" role="stop"/>
+  <member type="N" ref="2510471049" role="stop"/>
+  <member type="N" ref="2510471157" role="stop"/>
+  <member type="N" ref="2510471164" role="stop"/>
+  <member type="N" ref="2510471122" role="stop"/>
+  <member type="N" ref="2509620147" role="stop"/>
+  <member type="N" ref="2288199703" role="stop"/>
+  <member type="W" ref="140994821" role="platform"/>
+  <member type="N" ref="2331960742" role="stop"/>
+  <member type="W" ref="217210756" role="platform"/>
+  <member type="N" ref="2293994066" role="stop"/>
+  <member type="W" ref="122504890" role="platform"/>
+  <member type="N" ref="2293993868" role="stop"/>
+  <member type="W" ref="122580876" role="platform"/>
+  <member type="N" ref="2293993859" role="stop"/>
+  <member type="W" ref="261111319" role="platform"/>
+  <member type="N" ref="2293993929" role="stop"/>
+  <member type="N" ref="79721398" role="stop"/>
+  <member type="N" ref="2293994047" role="stop"/>
+  <member type="N" ref="2287963578" role="stop"/>
+  <member type="N" ref="2296833061" role="stop"/>
+  <member type="N" ref="2296833114" role="stop"/>
+  <member type="W" ref="122729040" role="platform"/>
+  <member type="N" ref="2296833143" role="stop"/>
+  <member type="N" ref="276171350" role="stop"/>
+  <member type="N" ref="60676388" role="stop"/>
+  <member type="W" ref="263063495" role="platform"/>
+  <member type="W" ref="27999830" role=""/>
+  <member type="W" ref="58993079" role=""/>
+  <member type="W" ref="27999826" role=""/>
+  <member type="W" ref="265532639" role=""/>
+  <member type="W" ref="140549310" role=""/>
+  <member type="W" ref="264935316" role=""/>
+  <member type="W" ref="358479330" role=""/>
+  <member type="W" ref="265532171" role=""/>
+  <member type="W" ref="25585623" role=""/>
+  <member type="W" ref="25585675" role=""/>
+  <member type="W" ref="25585676" role=""/>
+  <member type="W" ref="25585622" role=""/>
+  <member type="W" ref="243573842" role=""/>
+  <member type="W" ref="265532169" role=""/>
+  <member type="W" ref="220270704" role=""/>
+  <member type="W" ref="220270708" role=""/>
+  <member type="W" ref="220270714" role=""/>
+  <member type="W" ref="220270713" role=""/>
+  <member type="W" ref="220270694" role=""/>
+  <member type="W" ref="25585539" role=""/>
+  <member type="W" ref="228707687" role=""/>
+  <member type="W" ref="228707705" role=""/>
+  <member type="W" ref="228707706" role=""/>
+  <member type="W" ref="243702669" role=""/>
+  <member type="W" ref="251518415" role=""/>
+  <member type="W" ref="251518412" role=""/>
+  <member type="W" ref="251518416" role=""/>
+  <member type="W" ref="384007076" role=""/>
+  <member type="W" ref="384007077" role=""/>
+  <member type="W" ref="219652646" role=""/>
+  <member type="W" ref="25452759" role=""/>
+  <member type="W" ref="25585540" role=""/>
+  <member type="W" ref="384007081" role=""/>
+  <member type="W" ref="25498436" role=""/>
+  <tag k="to" v="Dr. Karl Renner Ring"/>
+  <tag k="ref" v="49"/>
+  <tag k="from" v="Hütteldorf"/>
+  <tag k="name" v="Tram 49: Hütteldorf =&gt; Dr. Karl Renner Ring"/>
+  <tag k="route" v="tram"/>
+  <tag k="network" v="VOR"/>
+  <tag k="operator" v="Wiener Linien"/>
+  <tag k="opening_hours" v="05:00-00:30"/>
+</relation>

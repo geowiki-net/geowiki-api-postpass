@@ -1,0 +1,5 @@
+<relation id="167731">
+  <bounds minlat="48.2006663" minlon="16.3362088" maxlat="48.2013739" maxlon="16.3371581"/>
+  <member type="W" ref="37337537" role="outer"/>
+  <member type="W" ref="37337538" role="inner"/>
+</relation>

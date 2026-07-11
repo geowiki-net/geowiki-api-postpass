@@ -1,0 +1,5 @@
+<relation id="167731">
+  <center lat="48.2010201" lon="16.3366835"/>
+  <member type="W" ref="37337537" role="outer"/>
+  <member type="W" ref="37337538" role="inner"/>
+</relation>
