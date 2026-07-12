@@ -14,7 +14,7 @@ describe('Test compiling filters', function () {
           properties: defines.TAGS
         })
 
-        assert.equal(result, def.tags)
+        assert.equal(result[0], def.tags)
       })
     })
   })
@@ -31,7 +31,7 @@ describe('Test compiling filters', function () {
         const expected = def.tags +
           (def.tags.match(/ (r\.id|t)$/) ? ' WHERE' : ' AND') +
           ' geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)'
-        assert.equal(result, expected)
+        assert.equal(result[0], expected)
       })
     })
   })
@@ -44,7 +44,7 @@ describe('Test compiling filters', function () {
           properties: defines.TAGS|defines.MEMBERS
         })
 
-        assert.equal(result, def['tags-members'])
+        assert.equal(result[0], def['tags-members'])
       })
     })
   })
@@ -61,7 +61,7 @@ describe('Test compiling filters', function () {
         const expected = def['tags-members'] +
           (def['tags-members'].match(/ (r\.id|t)$/) ? ' WHERE' : ' AND') +
           ' geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)'
-        assert.equal(result, expected)
+        assert.equal(result[0], expected)
       })
     })
   })

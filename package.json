@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/geowiki-net/geowiki-api-postpass#readme",
   "dependencies": {
-    "@geowiki-net/geowiki-api": "github:geowiki-net/geowiki-api#postpass-1"
+    "@geowiki-net/geowiki-api": "github:geowiki-net/geowiki-api#subrequest-query-array-filterPart"
   },
   "devDependencies": {
     "mocha": "^11.7.6",

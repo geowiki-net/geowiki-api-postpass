@@ -66,7 +66,7 @@ class DBTypePostpass {
       result.limit = options.effortSplit
     }
 
-    return compileSelect(result)
+    return [compileSelect(result), {}]
   }
 
   compileStmt (stmt, options) {
