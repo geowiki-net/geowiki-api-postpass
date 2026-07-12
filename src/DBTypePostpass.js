@@ -66,7 +66,7 @@ class DBTypePostpass {
       result.limit = options.effortSplit
     }
 
-    return [compileSelect(result), {}]
+    return [compileSelect(result), { needFilter: result.needFilter }]
   }
 
   compileStmt (stmt, options) {
@@ -79,6 +79,7 @@ class DBTypePostpass {
         return this.compileFilterQuery(stmt, options)
       case 'FilterOr':
         const parts = stmt.parts.map(part => this.compileStmt(part, options))
+        let needFilter = false
 
         let result = [parts.shift()]
         result[0].where = [result[0].where]
@@ -92,6 +93,10 @@ class DBTypePostpass {
             part.where = [part.where]
             result.push(part)
           }
+
+          if (part.needFilter) {
+            needFilter = true
+          }
         })
 
         result.forEach(r => {
@@ -102,7 +107,8 @@ class DBTypePostpass {
           return {
             select: '*',
             table: '(' + result.map(r => compileSelect(r)).join(' UNION ') + ') t',
-            where: []
+            where: [],
+            needFilter
           }
         } else {
           return result[0]
@@ -138,27 +144,40 @@ class DBTypePostpass {
       }
     }
 
-    const where = this.compileStmtQuery(stmt)
+    const [where, needFilter] = this.compileStmtQuery(stmt)
 
     return {
       select: fields.join(', '),
       table,
-      where
+      where,
+      needFilter
     }
   }
 
   compileStmtQuery (stmt) {
+    let needFilter = false
+
     const filters = stmt.filters.map(filter => {
       if (filter.fun) {
+        if (!(filter.fun in compileFunctions)) {
+          console.error("Don't know how to compile filter function: " + JSON.stringify(filter))
+          needFilter = true
+        }
         return compileFunctions[filter.fun](filter)
       } else if (filter.op) {
         return this.compileOperator(filter)
       } else {
-        throw new Error("Don't know how to compile filter: " + JSON.stringify(filter))
+        console.error("Don't know how to compile filter: " + JSON.stringify(filter))
+        needFilter = true
       }
-    }).filter(r => r !== null)
+    }).filter(r => {
+      if (r === false) {
+        needFilter = true
+      }
+      return true
+    }).filter(r => r !== null && r !== false)
 
-    return filters
+    return [filters, needFilter]
   }
 
   compileOperator (filter) {
@@ -171,7 +190,8 @@ class DBTypePostpass {
         return column + compileOperators[filter.op] + value
       }
     } else {
-      throw new Error("Can't compile operator '" + filter.op + "'")
+      console.error("Can't compile operator '" + filter.op + "'")
+      return false
     }
   }
 
