@@ -1,0 +1,33 @@
+{
+  "type": "way",
+  "id": 4789279,
+  "tags": {
+    "name": "Langauergasse",
+    "oneway": "yes",
+    "source": "wien.at",
+    "highway": "residential",
+    "maxspeed": "30",
+    "source:maxspeed": "AT:zone:30",
+    "vehicle:conditional": "destination @ (Mo-Su 23:00-06:00)"
+  },
+  "bounds": {
+    "minlat": 48.1955248,
+    "maxlat": 48.1957903,
+    "minlon": 16.3361494,
+    "maxlon": 16.3369359
+  },
+  "geometry": [
+    {
+      "lon": 16.3369359,
+      "lat": 48.1957903
+    },
+    {
+      "lon": 16.3361816,
+      "lat": 48.1955357
+    },
+    {
+      "lon": 16.3361494,
+      "lat": 48.1955248
+    }
+  ]
+}

@@ -9,17 +9,5 @@
     "minlat": 48.2006663,
     "maxlon": 16.3371581,
     "maxlat": 48.2013739
-  },
-  "members": [
-    {
-      "ref": 37337537,
-      "type": "W",
-      "role": "outer"
-    },
-    {
-      "ref": 37337538,
-      "type": "W",
-      "role": "inner"
-    }
-  ]
+  }
 }

@@ -1,0 +1,20 @@
+{
+  "type": "relation",
+  "id": 910886,
+  "tags": {
+    "to": "Dr. Karl Renner Ring",
+    "ref": "49",
+    "from": "Hütteldorf",
+    "name": "Tram 49: Hütteldorf => Dr. Karl Renner Ring",
+    "route": "tram",
+    "network": "VOR",
+    "operator": "Wiener Linien",
+    "opening_hours": "05:00-00:30"
+  },
+  "bounds": {
+    "minlon": 16.2551849,
+    "minlat": 48.1968029,
+    "maxlon": 16.3599928,
+    "maxlat": 48.2068734
+  }
+}

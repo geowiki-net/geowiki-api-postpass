@@ -1,0 +1,11 @@
+<relation id="910886">
+  <bounds minlat="48.1968029" minlon="16.2551849" maxlat="48.2068734" maxlon="16.3599928"/>
+  <tag k="to" v="Dr. Karl Renner Ring"/>
+  <tag k="ref" v="49"/>
+  <tag k="from" v="Hütteldorf"/>
+  <tag k="name" v="Tram 49: Hütteldorf =&gt; Dr. Karl Renner Ring"/>
+  <tag k="route" v="tram"/>
+  <tag k="network" v="VOR"/>
+  <tag k="operator" v="Wiener Linien"/>
+  <tag k="opening_hours" v="05:00-00:30"/>
+</relation>

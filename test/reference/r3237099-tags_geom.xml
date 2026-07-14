@@ -1,0 +1,5 @@
+<relation id="3237099">
+  <bounds minlat="65.8635488" minlon="-180.0000000" maxlat="65.8660500" maxlon="180.0000000"/>
+  <tag k="natural" v="water"/>
+  <tag k="type" v="multipolygon"/>
+</relation>
