@@ -19,7 +19,8 @@ const compileFunctions = {
 const compileOperators = {
   '=': '=',
   '~': '~',
-  has_key: (filter) => 't.tags?' + quote(filter.key)
+  has_key: (filter) => 't.tags?' + quote(filter.key),
+  not_exists: (filter) => 'NOT t.tags?' + quote(filter.key),
 }
 const allFields = ['osm_id', 'osm_type', 'tags', 'nodes', 'members', 'geom', 'bbox_west', 'bbox_east']
 
