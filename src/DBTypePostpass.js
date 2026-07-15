@@ -74,18 +74,50 @@ class DBTypePostpass {
   }
 
   compileStmt (stmt, options) {
-    if (stmt.constructor.name === 'FilterQuery' && stmt.inputSets && stmt.type === 'nwr' && stmt.filters.length === 0) {
-      return this.compileStmt(Object.values(stmt.inputSets)[0].set, options)
-    }
-
+    let result
     switch (stmt.constructor.name) {
       case 'FilterQuery':
-        return this.compileFilterQuery(stmt, options)
+        result = this.compileFilterQuery(stmt, options)
+
+        if (stmt.inputSets) {
+          const recursingInputSets = Object.entries(stmt.inputSets)
+            .filter(s => s[1].recurse)
+          const normalInputSets = Object.entries(stmt.inputSets)
+            .filter(s => !s[1].recurse)
+
+          if (recursingInputSets.length) {
+            recursingInputSets.forEach((set, i) => {
+              options.properties |= GeowikiAPI.MEMBERS
+              const r = this.compileStmt(set[1].set, options)
+              r.select = {
+                node_id: 'unnest(nodes) AS node_id',
+                member: 'jsonb_array_elements(members) AS member'
+              }
+
+              let join_on = 'rec' + (i - 1)
+              if (i === 0) {
+                result.table += " RIGHT"
+                join_on = 't'
+              }
+
+              result.table += " JOIN (select CASE WHEN node_id IS NOT NULL THEN node_id ELSE CAST(member->>'ref' as bigint) END osm_id, CASE WHEN node_id IS NOT NULL THEN 'N' ELSE member->>'type' END osm_type from (" + compileSelect(r, {fields: ['node_id', 'member']}) + ')) rec' + i + " ON " + join_on + ".osm_id=rec" + i + ".osm_id and " + join_on + ".osm_type=rec" + i + ".osm_type"
+            })
+
+            result.select.osm_id = 'rec0.osm_id'
+            result.select.osm_type = 'rec0.osm_type'
+          }
+          if (normalInputSets.length) {
+            return this.compileStmt(normalInputSets[0][1].set, options) // TODO: could be several input sets
+          }
+
+        }
+        return result
+
       case 'FilterOr':
         const parts = stmt.parts.map(part => this.compileStmt(part, options))
         let needFilter = false
 
-        let result = [parts.shift()]
+        result = [parts.shift()]
         result[0].where = [result[0].where]
         parts.forEach(part => {
           if (!result.some(r => {
