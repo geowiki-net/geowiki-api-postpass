@@ -35,11 +35,13 @@ class DBTypePostpass {
 
   compile (query, options) {
     const stmt = query.getStatement()
+    const compileSelectOptions = {}
 
     let result = this.compileStmt(stmt, options)
 
     if ('requestId' in options) {
-      result.select += ', ' + options.requestId + ' as "rid"'
+      result.select.rid = options.requestId + ' as "rid"'
+      compileSelectOptions.fields = allFields.concat(['rid'])
     }
 
     if (options.bounds) {
@@ -68,7 +70,7 @@ class DBTypePostpass {
       result.limit = options.effortSplit
     }
 
-    return [compileSelect(result), { needFilter: result.needFilter }]
+    return [compileSelect(result, compileSelectOptions), { needFilter: result.needFilter }]
   }
 
   compileStmt (stmt, options) {
@@ -107,7 +109,9 @@ class DBTypePostpass {
 
         if (result.length > 1) {
           return {
-            select: '*',
+            select: Object.fromEntries(allFields.map(f => {
+              return [f, f]
+            })),
             table: '(' + result.map(r => compileSelect(r)).join(' UNION ') + ') t',
             where: [],
             needFilter
@@ -152,12 +156,8 @@ class DBTypePostpass {
 
     const [where, needFilter] = this.compileStmtQuery(stmt)
 
-    const select = allFields
-      .map(f => f in fields ? fields[f] : 'NULL AS "' + f + '"')
-      .join(', ')
-
     return {
-      select,
+      select: fields,
       table,
       where,
       needFilter
@@ -338,8 +338,12 @@ function convertToOSMJSON (data) {
   return result
 }
 
-function compileSelect (def) {
-  let result = 'SELECT ' + def.select + ' FROM ' + def.table
+function compileSelect (def, options = {}) {
+  const select = (options.fields || allFields)
+    .map(f => f in def.select ? def.select[f] : 'NULL AS "' + f + '"')
+    .join(', ')
+
+  let result = 'SELECT ' + select + ' FROM ' + def.table
   if (def.where && def.where.length) {
     result += ' WHERE ' + def.where.join(' AND ')
   }
