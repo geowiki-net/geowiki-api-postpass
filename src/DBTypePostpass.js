@@ -106,9 +106,15 @@ class DBTypePostpass {
             result.select.osm_id = 'rec0.osm_id'
             result.select.osm_type = 'rec0.osm_type'
           }
-          if (normalInputSets.length) {
-            return this.compileStmt(normalInputSets[0][1].set, options) // TODO: could be several input sets
-          }
+
+          console.log(stmt.fullString())
+          normalInputSets.forEach(set => {
+            const r = this.compileStmt(set[1].set, options)
+            result.table = r.table
+            result.where = result.where.concat(r.where)
+            console.log(r)
+          })
+          console.log('Y', result)
 
         }
         return result
