@@ -122,30 +122,30 @@ class DBTypePostpass {
 
   compileFilterQuery (stmt, options) {
     // postpass queries always require geom
-    let fields = {
+    let select = {
       osm_id: 't.osm_id',
       osm_type: 't.osm_type'
     }
     let table = tables[stmt.type] + ' t'
 
     if (options.properties & GeowikiAPI.GEOM) {
-      fields.geom = 't.geom'
+      select.geom = 't.geom'
     } else if (options.properties & (GeowikiAPI.BBOX|GeowikiAPI.CENTER)) {
       // split multipolygons in west/east parts, so that we can catch geometries spanning lon180
-      fields.bbox_west = 'cast(Box2D(ST_Collect(ARRAY(SELECT g.geom FROM ST_Dump(geom) g WHERE ST_XMin(g.geom) < 0))) as text) bbox_west'
-      fields.bbox_east = 'cast(Box2D(ST_Collect(ARRAY(SELECT geom FROM ST_Dump(geom) g WHERE ST_XMin(g.geom) >= 0))) as text) bbox_east'
+      select.bbox_west = 'cast(Box2D(ST_Collect(ARRAY(SELECT g.geom FROM ST_Dump(geom) g WHERE ST_XMin(g.geom) < 0))) as text) bbox_west'
+      select.bbox_east = 'cast(Box2D(ST_Collect(ARRAY(SELECT geom FROM ST_Dump(geom) g WHERE ST_XMin(g.geom) >= 0))) as text) bbox_east'
     }
 
     if (options.properties & GeowikiAPI.TAGS) {
-      fields.tags = 't.tags'
+      select.tags = 't.tags'
     }
     if (options.properties & GeowikiAPI.MEMBERS) {
       if (stmt.type === 'node') {
-        fields.nodes = '\'{}\'::bigint[] AS "nodes"'
-        fields.members = '\'{}\'::jsonb AS "members"'
+        select.nodes = '\'{}\'::bigint[] AS "nodes"'
+        select.members = '\'{}\'::jsonb AS "members"'
       } else {
-        fields.nodes = 'w.nodes'
-        fields.members = 'r.members'
+        select.nodes = 'w.nodes'
+        select.members = 'r.members'
         table += " left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id"
       }
     }
@@ -168,7 +168,7 @@ class DBTypePostpass {
         if (table !== r.table) {
           if (stmt.type === 'nwr') {
             table = r.table
-            fields = r.select
+            select = r.select
           }
           else if (set[1].set.type !== 'nwr') {
             console.log(table, r.table)
@@ -184,7 +184,7 @@ class DBTypePostpass {
     }
 
     return {
-      select: fields,
+      select,
       table,
       where,
       needFilter
