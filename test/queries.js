@@ -59,7 +59,7 @@ describe('Test compiling filters', function () {
         })
 
         const expected = def['tags-members'] +
-          (def['tags-members'].match(/ (r\.id|t)$/) ? ' WHERE' : ' AND') +
+          (def['tags-members'].match(/(r\.id|t)$/) ? ' WHERE' : ' AND') +
           ' geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)'
         assert.equal(result[0], expected)
       })

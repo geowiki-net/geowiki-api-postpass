@@ -13,7 +13,7 @@ const tables = {
 
 const compileFunctions = {
   bbox: (filter) => 'geom && st_setsrid(st_makebox2d(st_makepoint(' + filter.value.minlon + ',' + filter.value.minlat + '), st_makepoint(' + filter.value.maxlon + ',' + filter.value.maxlat + ')), 4326)',
-  id: (filter) => 'osm_id = ANY(\'{' + filter.value.join(',') + '}\')',
+  id: (filter) => 'osm_id=ANY(\'{' + filter.value.join(',') + '}\')',
   properties: (filter) => null,
 }
 const compileOperators = {
@@ -60,7 +60,7 @@ class DBTypePostpass {
 
       const where = []
       Object.entries(donePerType).forEach(([type, ids]) => {
-        result.where.push('NOT (osm_type=' + quote(typeOSMToPost[type]) + ' AND osm_id = ANY(ARRAY[' + ids.join(',') + ']))')
+        result.where.push('NOT (osm_type=' + quote(typeOSMToPost[type]) + ' AND osm_id=ANY(ARRAY[' + ids.join(',') + ']))')
       })
     }
 
@@ -146,7 +146,7 @@ class DBTypePostpass {
       } else {
         select.nodes = 'w.nodes'
         select.members = 'r.members'
-        table += " left join planet_osm_ways w on t.osm_type = 'W' and t.osm_id = w.id left join planet_osm_rels r on t.osm_type = 'R' and t.osm_id = r.id"
+        table += " LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id"
       }
     }
 
