@@ -32,18 +32,25 @@ const compileOperators = {
 
 compileEvalOperators = {
   '==': '=',
+  '!=': '!=',
+  '>': '>',
+  '<': '<',
+  '>=': '>=',
+  '<=': '<=',
 }
 compileEvalFunctions = {
   'id': (param) => 'osm_id',
   'type': (param) => "(SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)",
   'tag': (param) => 't.tags->>' + param[0],
   'is_tag': (param) => 'CASE WHEN t.tags?' + param[0] + ' THEN 1 ELSE 0 END',
+  'count_tags': (param) => '(SELECT COUNT(*) FROM jsonb_object_keys(tags))',
 }
 compileEvalFunctionTypes = {
   'id': 'number',
   'type': 'string',
   'tag': 'string',
   'is_tag': 'number',
+  'count_tags': 'number'
 }
 
 /**
