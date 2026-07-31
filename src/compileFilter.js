@@ -4,7 +4,17 @@ const compileFunctions = {
   bbox: (filter) => 'geom && st_setsrid(st_makebox2d(st_makepoint(' + filter.value.minlon + ',' + filter.value.minlat + '), st_makepoint(' + filter.value.maxlon + ',' + filter.value.maxlat + ')), 4326)',
   id: (filter) => 'osm_id=ANY(\'{' + filter.value.join(',') + '}\')',
   properties: (filter) => [[], {needFilter: true}],
-  if: (filter) => compileEvaluator(filter.value),
+  if: (filter) => {
+    const result =  compileEvaluator(filter.value)
+    switch (result[1].type) {
+      case 'number':
+        result[0][0] += '<>0'
+        break
+      case 'string':
+        result[0][0] = 'LOWER(' + result[0][0] + ") NOT IN ('false', '', '0')"
+    }
+    return result
+  },
 }
 
 const compileOperators = {
@@ -28,6 +38,12 @@ compileEvalFunctions = {
   'type': (param) => "(SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)",
   'tag': (param) => 't.tags->>' + param[0],
   'is_tag': (param) => 'CASE WHEN t.tags?' + param[0] + ' THEN 1 ELSE 0 END',
+}
+compileEvalFunctionTypes = {
+  'id': 'number',
+  'type': 'string',
+  'tag': 'string',
+  'is_tag': 'number',
 }
 
 /**
@@ -76,7 +92,11 @@ function compileEvaluator (filter) {
   }
 
   if (filter.value) {
-    return [[quote(filter.value)], {}]
+    if (typeof filter.value === 'number') {
+      return [[filter.value], {type:'number'}]
+    } else {
+      return [[quote(filter.value)], {type:'string'}]
+    }
   }
 
   if (filter.op) {
@@ -97,6 +117,7 @@ function compileEvaluator (filter) {
     }
 
     result[1] = { ...left[1], ...right[1], ...result[1] }
+    result[1].type = 'boolean'
 
     return typeof result === 'string' ? [[result], {}] : result
   }
@@ -114,7 +135,7 @@ function compileEvaluator (filter) {
     })
 
     const result = compileEvalFunctions[filter.fun](params)
-    return typeof result === 'string' ? [[result], {}] : result
+    return typeof result === 'string' ? [[result], {type: compileEvalFunctionTypes[filter.fun]}] : result
   }
 }
 

@@ -19,10 +19,10 @@ const tests = {
   '(1234)': [["osm_id=ANY('{1234}')"],{}],
   '(id:1,2,3)': [["osm_id=ANY('{1,2,3}')"],{}],
   '(properties:63)': [[],{"needFilter":true}],
-  '(if: t["name"]=="foo")': ["t.tags->>'name'='foo'",{}],
-  '(if: t["name"]==t["eman"])': ["t.tags->>'name'=t.tags->>'eman'",{}],
-  '(if: id() == 5)': ["osm_id=5",{}],
-  '(if: is_tag("name"))': [["CASE WHEN t.tags?'name' THEN 1 ELSE 0 END"],{}]
+  '(if: t["name"]=="foo")': ["t.tags->>'name'='foo'",{"type": "boolean"}],
+  '(if: t["name"]==t["eman"])': ["t.tags->>'name'=t.tags->>'eman'",{"type": "boolean"}],
+  '(if: id() == 5)': ["osm_id=5",{"type": "boolean"}],
+  '(if: is_tag("name"))': [["CASE WHEN t.tags?'name' THEN 1 ELSE 0 END<>0"],{"type": "number"}]
 }
 
 describe('compileFilter', function () {

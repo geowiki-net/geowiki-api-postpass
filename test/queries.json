@@ -127,17 +127,15 @@
     "bboxquery": {
       "expectedElements": 138
     },
-    "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE t.tags->>'name'",
-
-    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE t.tags->>'name'"
-
+    "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE LOWER(t.tags->>'name') NOT IN ('false', '', '0')",
+    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE LOWER(t.tags->>'name') NOT IN ('false', '', '0')"
   },
   "node(if: is_tag('name'))": {
     "bboxquery": {
       "expectedElements": 138
     },
-    "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE CASE WHEN t.tags?'name' THEN 1 ELSE 0 END",
-    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE CASE WHEN t.tags?'name' THEN 1 ELSE 0 END"
+    "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE CASE WHEN t.tags?'name' THEN 1 ELSE 0 END<>0",
+    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE CASE WHEN t.tags?'name' THEN 1 ELSE 0 END<>0"
 
   }
 }
