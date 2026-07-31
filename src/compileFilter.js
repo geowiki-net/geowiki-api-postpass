@@ -8,7 +8,13 @@ const compileFunctions = {
 
 const compileOperators = {
   '=': '=',
+  '!=': '!=',
   '~': '~',
+  '~i': '~*',
+  '!~': '!~',
+  '!~i': '!~*',
+  has: (filter) => 't.tags->>' + quote(filter.key) + "~" + quote('^(.*;|)' + filter.value + '(|;.*)$'),
+  strsearch: (filter) => [[], {needFilter: true}], // TODO
   has_key: (filter) => 't.tags?' + quote(filter.key),
   not_exists: (filter) => 'NOT t.tags?' + quote(filter.key),
 }
@@ -37,7 +43,9 @@ function compileFilter (filter) {
 
 function compileOperator (filter) {
   if (filter.op in compileOperators) {
-    if (typeof compileOperators[filter.op] === 'function') {
+    if (filter.keyRegexp) {
+      return [[], {needFilter: true}]
+    } else if (typeof compileOperators[filter.op] === 'function') {
       const result = compileOperators[filter.op](filter)
       return typeof result === 'string' ? [[result], {}] : result
     } else {
