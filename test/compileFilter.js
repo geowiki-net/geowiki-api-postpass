@@ -19,6 +19,9 @@ const tests = {
   '(1234)': [["osm_id=ANY('{1234}')"],{}],
   '(id:1,2,3)': [["osm_id=ANY('{1,2,3}')"],{}],
   '(properties:63)': [[],{"needFilter":true}],
+  '(if: t["name"]=="foo")': ["t.tags->>'name'='foo'",{}],
+  '(if: t["name"]==t["eman"])': ["t.tags->>'name'=t.tags->>'eman'",{}],
+  '(if: id() == 5)': ["osm_id=5",{}],
 }
 
 describe('compileFilter', function () {
