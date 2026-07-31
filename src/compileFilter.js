@@ -3,7 +3,7 @@ const quote = require('./quote')
 const compileFunctions = {
   bbox: (filter) => 'geom && st_setsrid(st_makebox2d(st_makepoint(' + filter.value.minlon + ',' + filter.value.minlat + '), st_makepoint(' + filter.value.maxlon + ',' + filter.value.maxlat + ')), 4326)',
   id: (filter) => 'osm_id=ANY(\'{' + filter.value.join(',') + '}\')',
-  properties: (filter) => null,
+  properties: (filter) => [[], {needFilter: true}],
 }
 
 const compileOperators = {
@@ -13,34 +13,42 @@ const compileOperators = {
   not_exists: (filter) => 'NOT t.tags?' + quote(filter.key),
 }
 
+/**
+ * @return [
+ *   list of queries,  // ["filter1='bar'", ...]
+ *   options           // {needFilter: true} <- do not return false values, to not overwrite other options
+ * ]
+ */
 function compileFilter (filter) {
   if (filter.fun) {
     if (!(filter.fun in compileFunctions)) {
       console.error("Don't know how to compile filter function: " + JSON.stringify(filter))
-      needFilter = true
+      return [[], {needFilter: true}]
     }
-    return compileFunctions[filter.fun](filter)
+    const result = compileFunctions[filter.fun](filter)
+    return typeof result === 'string' ? [[result], {}] : result
   } else if (filter.op) {
     return compileOperator(filter)
-  } else {
-    console.error("Don't know how to compile filter: " + JSON.stringify(filter))
-    needFilter = true
   }
+
+  console.error("Don't know how to compile filter: " + JSON.stringify(filter))
+  return [[], {needFilter: true}]
 }
 
 function compileOperator (filter) {
   if (filter.op in compileOperators) {
     if (typeof compileOperators[filter.op] === 'function') {
-      return compileOperators[filter.op](filter)
+      const result = compileOperators[filter.op](filter)
+      return typeof result === 'string' ? [[result], {}] : result
     } else {
       const column = 't.tags->>' + quote(filter.key)
       const value = filter.value ? quote(filter.value) : null
-      return column + compileOperators[filter.op] + value
+      return [[column + compileOperators[filter.op] + value], {}]
     }
-  } else {
-    console.error("Can't compile operator '" + filter.op + "'")
-    return false
   }
+
+  console.error("Can't compile operator '" + filter.op + "'")
+  return [[], {needFilter: true}]
 }
 
 module.exports = compileFilter

@@ -141,7 +141,8 @@ class DBTypePostpass {
       }
     }
 
-    let [where, needFilter] = this.compileStmtQuery(stmt)
+    let [where, filterOptions] = this.compileStmtQuery(stmt)
+    const needFilter = filterOptions.needFilter
 
     if (stmt.inputSets) {
       const recursingInputSets = Object.entries(stmt.inputSets)
@@ -183,18 +184,18 @@ class DBTypePostpass {
   }
 
   compileStmtQuery (stmt) {
-    let needFilter = false
+    let options = {}
+    let filters = []
 
-    const filters = stmt.filters.map(filter => {
-      return compileFilter(filter)
-    }).filter(r => {
-      if (r === false) {
-        needFilter = true
-      }
-      return true
-    }).filter(r => r !== null && r !== false)
+    stmt.filters.map(filter => {
+      const result = compileFilter(filter)
 
-    return [filters, needFilter]
+      console.log(result)
+      filters = filters.concat(result[0])
+      options = { ...options, ...result[1]}
+    })
+
+    return [filters, options]
   }
 
   execute (context, callback) {
