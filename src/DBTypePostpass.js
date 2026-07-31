@@ -1,5 +1,6 @@
 const GeowikiAPI = require('@geowiki-net/geowiki-api')
 const geojson2element = require('./geojson2element')
+const BoundingBox = require('boundingbox')
 
 const typePostToOSM = { N: 'node', W: 'way', R: 'relation' }
 const typeOSMToPost = { node: 'N', way: 'W', relation: 'R' }
@@ -22,7 +23,7 @@ const compileOperators = {
   has_key: (filter) => 't.tags?' + quote(filter.key),
   not_exists: (filter) => 'NOT t.tags?' + quote(filter.key),
 }
-const allFields = ['osm_id', 'osm_type', 'tags', 'nodes', 'members', 'geom', 'bbox_west', 'bbox_east']
+const allFields = ['osm_id', 'osm_type', 'tags', 'nodes', 'members', 'geom', 'bboxes']
 
 class DBTypePostpass {
   constructor (url, geowiki, options) {
@@ -132,8 +133,7 @@ class DBTypePostpass {
       select.geom = 't.geom'
     } else if (options.properties & (GeowikiAPI.BBOX|GeowikiAPI.CENTER)) {
       // split multipolygons in west/east parts, so that we can catch geometries spanning lon180
-      select.bbox_west = 'cast(Box2D(ST_Collect(ARRAY(SELECT g.geom FROM ST_Dump(geom) g WHERE ST_XMin(g.geom) < 0))) as text) bbox_west'
-      select.bbox_east = 'cast(Box2D(ST_Collect(ARRAY(SELECT geom FROM ST_Dump(geom) g WHERE ST_XMin(g.geom) >= 0))) as text) bbox_east'
+      select.bboxes = 'ARRAY(SELECT CAST(Box2D(geom) AS text) from ST_Dump(geom)) bboxes'
     }
 
     if (options.properties & GeowikiAPI.TAGS) {
@@ -296,28 +296,9 @@ function convertToOSMJSON (data) {
       delete(item.tags)
     }
 
-    if (feature.bbox_west || feature.bbox_east) {
-      const bounds = {
-        east: box2bounds(feature.bbox_east),
-        west: box2bounds(feature.bbox_west)
-      }
-
-      if (bounds.east && bounds.west) {
-        item.bounds = {
-          minlat: Math.min(bounds.east.minlat, bounds.west.minlat),
-          maxlat: Math.max(bounds.east.maxlat, bounds.west.maxlat)
-        }
-
-        if (bounds.east.maxlon - bounds.west.minlon < 360 - bounds.west.maxlon - bounds.east.minlon) {
-          item.bounds.minlon = bounds.east.maxlon
-          item.bounds.maxlon = bounds.west.minlon
-        } else {
-          item.bounds.maxlon = bounds.west.maxlon
-          item.bounds.minlon = bounds.east.minlon
-        }
-      } else {
-        item.bounds = bounds.east || bounds.west
-      }
+    if (feature.bboxes) {
+      item.bounds = new BoundingBox(box2bounds(feature.bboxes[0]))
+      feature.bboxes.slice(1).forEach(b => item.bounds.extend(box2bounds(b)))
     }
 
     if (item.type === 'node') {
