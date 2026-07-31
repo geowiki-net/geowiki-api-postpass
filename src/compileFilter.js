@@ -24,9 +24,10 @@ compileEvalOperators = {
   '==': '=',
 }
 compileEvalFunctions = {
-  'tag': (param) => 't.tags->>' + param[0],
   'id': (param) => 'osm_id',
   'type': (param) => "(SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)",
+  'tag': (param) => 't.tags->>' + param[0],
+  'is_tag': (param) => 'CASE WHEN t.tags?' + param[0] + ' THEN 1 ELSE 0 END',
 }
 
 /**

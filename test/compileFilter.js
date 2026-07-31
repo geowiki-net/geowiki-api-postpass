@@ -22,6 +22,7 @@ const tests = {
   '(if: t["name"]=="foo")': ["t.tags->>'name'='foo'",{}],
   '(if: t["name"]==t["eman"])': ["t.tags->>'name'=t.tags->>'eman'",{}],
   '(if: id() == 5)': ["osm_id=5",{}],
+  '(if: is_tag("name"))': [["CASE WHEN t.tags?'name' THEN 1 ELSE 0 END"],{}]
 }
 
 describe('compileFilter', function () {
