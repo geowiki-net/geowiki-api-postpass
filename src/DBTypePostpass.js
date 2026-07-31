@@ -74,10 +74,6 @@ class DBTypePostpass {
   }
 
   compileStmt (stmt, options) {
-    if (stmt.constructor.name === 'FilterQuery' && stmt.inputSets && stmt.type === 'nwr' && stmt.filters.length === 0) {
-      return this.compileStmt(Object.values(stmt.inputSets)[0].set, options)
-    }
-
     switch (stmt.constructor.name) {
       case 'FilterQuery':
         return this.compileFilterQuery(stmt, options)
@@ -126,7 +122,7 @@ class DBTypePostpass {
 
   compileFilterQuery (stmt, options) {
     // postpass queries always require geom
-    const fields = {
+    let fields = {
       osm_id: 't.osm_id',
       osm_type: 't.osm_type'
     }
@@ -154,7 +150,38 @@ class DBTypePostpass {
       }
     }
 
-    const [where, needFilter] = this.compileStmtQuery(stmt)
+    let [where, needFilter] = this.compileStmtQuery(stmt)
+
+    if (stmt.inputSets) {
+      const recursingInputSets = Object.entries(stmt.inputSets)
+        .filter(s => s[1].recurse)
+      const normalInputSets = Object.entries(stmt.inputSets)
+        .filter(s => !s[1].recurse)
+
+      if (recursingInputSets.length) {
+        throw new Error('recursing inputsets not supported yet')
+      }
+
+      normalInputSets.forEach(set => {
+        const r = this.compileStmt(set[1].set, options)
+
+        if (table !== r.table) {
+          if (stmt.type === 'nwr') {
+            table = r.table
+            fields = r.select
+          }
+          else if (set[1].set.type !== 'nwr') {
+            console.log(table, r.table)
+            throw new Error('what to do')
+          }
+        }
+
+        where = r.where.concat(where)
+        if (r.needFilter) {
+          needFilter = true
+        }
+      })
+    }
 
     return {
       select: fields,
