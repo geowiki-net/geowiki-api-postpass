@@ -1,6 +1,8 @@
 const GeowikiAPI = require('@geowiki-net/geowiki-api')
 const geojson2element = require('./geojson2element')
 const BoundingBox = require('boundingbox')
+const compileFilter = require('./compileFilter')
+const quote = require('./quote')
 
 const typePostToOSM = { N: 'node', W: 'way', R: 'relation' }
 const typeOSMToPost = { node: 'N', way: 'W', relation: 'R' }
@@ -12,17 +14,6 @@ const tables = {
   relation: "(SELECT osm_id, osm_type, tags, geom FROM postpass_pointlinepolygon WHERE osm_type='R')"
 }
 
-const compileFunctions = {
-  bbox: (filter) => 'geom && st_setsrid(st_makebox2d(st_makepoint(' + filter.value.minlon + ',' + filter.value.minlat + '), st_makepoint(' + filter.value.maxlon + ',' + filter.value.maxlat + ')), 4326)',
-  id: (filter) => 'osm_id=ANY(\'{' + filter.value.join(',') + '}\')',
-  properties: (filter) => null,
-}
-const compileOperators = {
-  '=': '=',
-  '~': '~',
-  has_key: (filter) => 't.tags?' + quote(filter.key),
-  not_exists: (filter) => 'NOT t.tags?' + quote(filter.key),
-}
 const allFields = ['osm_id', 'osm_type', 'tags', 'nodes', 'members', 'geom', 'bboxes']
 
 class DBTypePostpass {
@@ -195,18 +186,7 @@ class DBTypePostpass {
     let needFilter = false
 
     const filters = stmt.filters.map(filter => {
-      if (filter.fun) {
-        if (!(filter.fun in compileFunctions)) {
-          console.error("Don't know how to compile filter function: " + JSON.stringify(filter))
-          needFilter = true
-        }
-        return compileFunctions[filter.fun](filter)
-      } else if (filter.op) {
-        return this.compileOperator(filter)
-      } else {
-        console.error("Don't know how to compile filter: " + JSON.stringify(filter))
-        needFilter = true
-      }
+      return compileFilter(filter)
     }).filter(r => {
       if (r === false) {
         needFilter = true
@@ -215,21 +195,6 @@ class DBTypePostpass {
     }).filter(r => r !== null && r !== false)
 
     return [filters, needFilter]
-  }
-
-  compileOperator (filter) {
-    if (filter.op in compileOperators) {
-      if (typeof compileOperators[filter.op] === 'function') {
-        return compileOperators[filter.op](filter)
-      } else {
-        const column = 't.tags->>' + quote(filter.key)
-        const value = filter.value ? quote(filter.value) : null
-        return column + compileOperators[filter.op] + value
-      }
-    } else {
-      console.error("Can't compile operator '" + filter.op + "'")
-      return false
-    }
   }
 
   execute (context, callback) {
@@ -262,10 +227,6 @@ class DBTypePostpass {
         global.setTimeout(() => callback(err), 0)
       })
   }
-}
-
-function quote (str) {
-  return "'" + str.replace(/'/g, "\\'") + "'"
 }
 
 function convertToOSMJSON (data) {
