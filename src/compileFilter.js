@@ -31,8 +31,8 @@ const compileEvalOperators = {
   '<': '<',
   '>=': '>=',
   '<=': '<=',
-  '&&': ' AND ',
-  '||': ' OR ',
+  '&&': (left, right) => [toBoolean(left) + ' AND ' + toBoolean(right), { type: 'boolean' }],
+  '||': (left, right) => [toBoolean(left) + ' OR ' + toBoolean(right), { type: 'boolean' }],
   '!': (left, right) => ['NOT ' + toBoolean(right), { type: 'boolean' }],
   '+': (left, right) => {
     if (left[1].type === 'string' || right[1].type === 'string') {
