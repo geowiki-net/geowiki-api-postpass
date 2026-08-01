@@ -121,10 +121,10 @@ function compileEvaluator (filter) {
         return [[], {needFilter: true}]
       }
       result = [left[0][0] + result + right[0][0], {}]
+      result[1].type = 'boolean'
+    } else {
+      result[1] = { ...left[1], ...right[1], ...result[1] }
     }
-
-    result[1] = { ...left[1], ...right[1], ...result[1] }
-    result[1].type = 'boolean'
 
     return typeof result === 'string' ? [[result], {}] : result
   }
