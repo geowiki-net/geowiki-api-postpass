@@ -75,7 +75,11 @@ compileEvalFunctions = {
       return ['', {type: 'string'}]
     }
   },
+  'geom': (param) => 'geom',
   'length': (param) => 'ST_Length(' + (param.length ? param[0] : 'geom') + '::geography)+ST_Perimeter(' + (param.length ? param[0] : 'geom') + '::geography)',
+  'lat': (param) => 'ST_Y(ST_Centroid(' + (param.length ? param[0] : 'geom') + '))',
+  'lon': (param) => 'ST_X(ST_Centroid(' + (param.length ? param[0] : 'geom') + '))',
+  'pt': (param) => 'ST_Point(' + param[1] + ',' + param[0] + ')',
 }
 compileEvalFunctionTypes = {
   'id': 'number',
@@ -83,8 +87,12 @@ compileEvalFunctionTypes = {
   'tag': 'string',
   'is_tag': 'number',
   'count_tags': 'number',
+  'geom': 'geometry',
   '': null,
   'length': 'number',
+  'lat': 'number',
+  'lon': 'number',
+  'pt': 'geometry',
 }
 
 /**
