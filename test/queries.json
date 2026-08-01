@@ -143,5 +143,11 @@
     },
     "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE (SELECT COUNT(*) FROM jsonb_object_keys(tags))>5",
     "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE (SELECT COUNT(*) FROM jsonb_object_keys(tags))>5"
+  },
+  "node(if: 5+3+1)": {
+    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE 5+3+1<>0"
+  },
+  "node(if: '5'+3+1)": {
+    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE LOWER(CONCAT(CONCAT('5',3),1)) NOT IN ('false', '', '0')"
   }
 }

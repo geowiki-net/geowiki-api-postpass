@@ -37,6 +37,14 @@ compileEvalOperators = {
   '<': '<',
   '>=': '>=',
   '<=': '<=',
+  '+': (left, right) => {
+    console.log('+', left, right)
+    if (left[1].type === 'string' || right[1].type === 'string') {
+      return [['CONCAT(' + left[0][0] + ',' + right[0][0] + ')'], {type: 'string'}]
+    } else {
+      return [[to_number(left) + '+' + to_number(right)], {type: 'number'}]
+    }
+  }
 }
 compileEvalFunctions = {
   'id': (param) => 'osm_id',
@@ -143,6 +151,17 @@ function compileEvaluator (filter) {
 
     const result = compileEvalFunctions[filter.fun](params)
     return typeof result === 'string' ? [[result], {type: compileEvalFunctionTypes[filter.fun]}] : result
+  }
+}
+
+function to_number (item) {
+  switch (item[1].type) {
+    case 'number':
+      return item[0][0]
+    case 'boolean':
+      return 'CASE WHEN ' + item[0] + ' THEN 1 ELSE 0 END'
+    case 'string':
+      return 'CAST(' + item[0] + ' AS DECIMAL)'
   }
 }
 

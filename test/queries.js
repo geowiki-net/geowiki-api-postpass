@@ -8,6 +8,10 @@ const queryList = require('./queries.json')
 describe('Test compiling filters', function () {
   describe('compile filter with tags, without bounds', function () {
     Object.entries(queryList).forEach(([query, def]) => {
+      if (!def.tags) {
+        return
+      }
+
       it(query, function () {
         const filter = new Filter(query)
         const result = db.compile(filter, {
@@ -21,6 +25,10 @@ describe('Test compiling filters', function () {
 
   describe('compile filter with tags, with bounds', function () {
     Object.entries(queryList).forEach(([query, def]) => {
+      if (!def.tags) {
+        return
+      }
+
       it(query, function () {
         const filter = new Filter(query)
         const result = db.compile(filter, {
