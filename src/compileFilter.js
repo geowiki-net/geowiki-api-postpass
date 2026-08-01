@@ -31,6 +31,8 @@ compileEvalOperators = {
   '<': '<',
   '>=': '>=',
   '<=': '<=',
+  '&&': ' AND ',
+  '||': ' OR ',
   '!': (left, right) => ['NOT ' + to_boolean(right), {type: 'boolean'}],
   '+': (left, right) => {
     if (left[1].type === 'string' || right[1].type === 'string') {

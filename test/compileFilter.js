@@ -23,6 +23,7 @@ const tests = {
   '(if: t["name"]==t["eman"])': ["t.tags->>'name'=t.tags->>'eman'",{"type": "boolean"}],
   '(if: !1)': ["NOT 1<>0",{"type":"boolean"}],
   '(if: !"")': ["NOT LOWER('') NOT IN ('false', '', '0')",{"type":"boolean"}],
+  '(if: type() == "way" && id() == 12)': ["(SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)='way' AND osm_id=12",{"type":"boolean"}],
   '(if: id() == 5)': ["osm_id=5",{"type": "boolean"}],
   '(if: is_tag("name"))': ["CASE WHEN t.tags?'name' THEN 1 ELSE 0 END<>0",{"type": "number"}],
   '(if: 2+3+1)': ["2+3+1<>0", {"type": "number"}],
