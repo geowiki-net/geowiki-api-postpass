@@ -6,13 +6,7 @@ const compileFunctions = {
   properties: (filter) => [null, {needFilter: true}],
   if: (filter) => {
     const result =  compileEvaluator(filter.value)
-    switch (result[1].type) {
-      case 'number':
-        result[0] += '<>0'
-        break
-      case 'string':
-        result[0] = 'LOWER(' + result[0] + ") NOT IN ('false', '', '0')"
-    }
+    result[0] = to_boolean(result)
     return result
   },
 }
@@ -37,8 +31,8 @@ compileEvalOperators = {
   '<': '<',
   '>=': '>=',
   '<=': '<=',
+  '!': (left, right) => ['NOT ' + to_boolean(right), {type: 'boolean'}],
   '+': (left, right) => {
-    console.log('+', left, right)
     if (left[1].type === 'string' || right[1].type === 'string') {
       return [['CONCAT(' + left[0] + ',' + right[0] + ')'], {type: 'string'}]
     } else {
@@ -122,11 +116,10 @@ function compileEvaluator (filter) {
       return [null, {needFilter: true}]
     }
 
-    const left = compileEvaluator(filter.left)
-    const right = compileEvaluator(filter.right)
+    const left = filter.left ? compileEvaluator(filter.left) : [null, {}]
+    const right = filter.right ? compileEvaluator(filter.right) : [null, {}]
     let result = typeof compileEvalOperators[filter.op] === 'function' ? compileEvalOperators[filter.op](left, right) : compileEvalOperators[filter.op]
 
-    console.log(result)
     if (typeof result === 'string') {
       if (left[0] === null || right[0] === null) {
         console.log('eval operator ' + filter.op + ' can\'t build', filter)
@@ -166,6 +159,18 @@ function to_number (item) {
       return 'CASE WHEN ' + item[0] + ' THEN 1 ELSE 0 END'
     case 'string':
       return 'CAST(' + item[0] + ' AS DECIMAL)'
+  }
+}
+
+function to_boolean (item) {
+  console.log(item)
+  switch (item[1].type) {
+    case 'number':
+      return item[0] + '<>0'
+    case 'string':
+      return 'LOWER(' + item[0] + ") NOT IN ('false', '', '0')"
+    case 'boolean':
+      return item[0]
   }
 }
 

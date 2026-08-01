@@ -21,6 +21,8 @@ const tests = {
   '(properties:63)': [null,{"needFilter":true}],
   '(if: t["name"]=="foo")': ["t.tags->>'name'='foo'",{"type": "boolean"}],
   '(if: t["name"]==t["eman"])': ["t.tags->>'name'=t.tags->>'eman'",{"type": "boolean"}],
+  '(if: !1)': ["NOT 1<>0",{"type":"boolean"}],
+  '(if: !"")': ["NOT LOWER('') NOT IN ('false', '', '0')",{"type":"boolean"}],
   '(if: id() == 5)': ["osm_id=5",{"type": "boolean"}],
   '(if: is_tag("name"))': ["CASE WHEN t.tags?'name' THEN 1 ELSE 0 END<>0",{"type": "number"}],
   '(if: 2+3+1)': ["2+3+1<>0", {"type": "number"}],
