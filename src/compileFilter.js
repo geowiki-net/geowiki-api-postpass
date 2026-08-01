@@ -52,13 +52,15 @@ compileEvalFunctions = {
   'tag': (param) => 't.tags->>' + param[0],
   'is_tag': (param) => 'CASE WHEN t.tags?' + param[0] + ' THEN 1 ELSE 0 END',
   'count_tags': (param) => '(SELECT COUNT(*) FROM jsonb_object_keys(tags))',
+  'length': (param) => 'ST_Length(geom::geography)+ST_Perimeter(geom::geography)',
 }
 compileEvalFunctionTypes = {
   'id': 'number',
   'type': 'string',
   'tag': 'string',
   'is_tag': 'number',
-  'count_tags': 'number'
+  'count_tags': 'number',
+  'length': 'number',
 }
 
 /**

@@ -26,6 +26,7 @@ const tests = {
   '(if: 2+3+1)': ["2+3+1<>0", {"type": "number"}],
   '(if: "2"+3+1)': ["LOWER(CONCAT(CONCAT('2',3),1)) NOT IN ('false', '', '0')",{"type":"string"}],
   '(if: 3+1+"2")': ["LOWER(CONCAT(3+1,'2')) NOT IN ('false', '', '0')",{"type":"string"}],
+  '(if: length() > 5)': ["ST_Length(geom::geography)+ST_Perimeter(geom::geography)>5",{"type":"boolean"}],
 }
 
 describe('compileFilter', function () {
