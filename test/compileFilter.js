@@ -22,7 +22,10 @@ const tests = {
   '(if: t["name"]=="foo")': ["t.tags->>'name'='foo'",{"type": "boolean"}],
   '(if: t["name"]==t["eman"])': ["t.tags->>'name'=t.tags->>'eman'",{"type": "boolean"}],
   '(if: id() == 5)': ["osm_id=5",{"type": "boolean"}],
-  '(if: is_tag("name"))': ["CASE WHEN t.tags?'name' THEN 1 ELSE 0 END<>0",{"type": "number"}]
+  '(if: is_tag("name"))': ["CASE WHEN t.tags?'name' THEN 1 ELSE 0 END<>0",{"type": "number"}],
+  '(if: 2+3+1)': ["2+3+1<>0", {"type": "number"}],
+  '(if: "2"+3+1)': ["LOWER(CONCAT(CONCAT('2',3),1)) NOT IN ('false', '', '0')",{"type":"string"}],
+  '(if: 3+1+"2")': ["LOWER(CONCAT(3+1,'2')) NOT IN ('false', '', '0')",{"type":"string"}],
 }
 
 describe('compileFilter', function () {
