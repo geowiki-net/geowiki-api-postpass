@@ -43,8 +43,8 @@ compileEvalOperators = {
 compileEvalFunctions = {
   'id': (param) => 'osm_id',
   'type': (param) => "(SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)",
-  'tag': (param) => 't.tags->>' + param[0],
-  'is_tag': (param) => 'CASE WHEN t.tags?' + param[0] + ' THEN 1 ELSE 0 END',
+  'tag': (param) => 't.tags->>' + to_string(param[0]),
+  'is_tag': (param) => 'CASE WHEN t.tags?' + to_string(param[0]) + ' THEN 1 ELSE 0 END',
   'count_tags': (param) => '(SELECT COUNT(*) FROM jsonb_object_keys(tags))',
   'length': (param) => 'ST_Length(geom::geography)+ST_Perimeter(geom::geography)',
 }
@@ -139,12 +139,7 @@ function compileEvaluator (filter) {
       return [null, {needFilter: true}]
     }
 
-    let options = {}
-    const params = filter.parameters.map(p => {
-      const r = compileEvaluator(p)
-      options = {...options, ...r[1]}
-      return r[0]
-    })
+    const params = filter.parameters.map(p => compileEvaluator(p))
 
     const result = compileEvalFunctions[filter.fun](params)
     return typeof result === 'string' ? [result, {type: compileEvalFunctionTypes[filter.fun]}] : result
@@ -163,7 +158,6 @@ function to_number (item) {
 }
 
 function to_boolean (item) {
-  console.log(item)
   switch (item[1].type) {
     case 'number':
       return item[0] + '<>0'
@@ -171,6 +165,16 @@ function to_boolean (item) {
       return 'LOWER(' + item[0] + ") NOT IN ('false', '', '0')"
     case 'boolean':
       return item[0]
+  }
+}
+
+function to_string (item) {
+  switch (item[1].type) {
+    case 'number':
+    case 'string':
+      return item[0]
+    case 'boolean':
+      return item[0] ? '1' : '0'
   }
 }
 
