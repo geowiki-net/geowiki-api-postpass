@@ -185,13 +185,14 @@ class DBTypePostpass {
 
   compileStmtQuery (stmt) {
     let options = {}
-    let filters = []
+    const filters = []
 
     stmt.filters.map(filter => {
       const result = compileFilter(filter)
 
-      console.log(result)
-      filters = filters.concat(result[0])
+      if (result[0] !== null) {
+        filters.push(result[0])
+      }
       options = { ...options, ...result[1]}
     })
 
