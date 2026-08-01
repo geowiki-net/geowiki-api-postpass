@@ -43,6 +43,7 @@ compileEvalOperators = {
   }
 }
 compileEvalFunctions = {
+  '': (param) => ['(' + param[0][0] + ')', param[0][1]], // parantheses
   'id': (param) => 'osm_id',
   'type': (param) => "(SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)",
   'tag': (param) => 't.tags->>' + to_string(param[0]),
@@ -56,6 +57,7 @@ compileEvalFunctionTypes = {
   'tag': 'string',
   'is_tag': 'number',
   'count_tags': 'number',
+  '': null,
   'length': 'number',
 }
 
@@ -136,7 +138,7 @@ function compileEvaluator (filter) {
     return typeof result === 'string' ? [result, {}] : result
   }
 
-  if (filter.fun) {
+  if ('fun' in filter) {
     if (!(filter.fun in compileEvalFunctions)) {
       return [null, {needFilter: true}]
     }
