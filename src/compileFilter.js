@@ -108,7 +108,7 @@ function compileEvaluator (filter) {
     filter = filter.data
   }
 
-  if (filter.value) {
+  if ('value' in filter) {
     if (typeof filter.value === 'number') {
       return [filter.value, {type:'number'}]
     } else {
@@ -118,6 +118,7 @@ function compileEvaluator (filter) {
 
   if (filter.op) {
     if (!(filter.op in compileEvalOperators)) {
+      console.log('Don\'t know how to handle eval operator "' + filter.op + '"')
       return [null, {needFilter: true}]
     }
 
