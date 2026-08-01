@@ -40,7 +40,10 @@ compileEvalOperators = {
     } else {
       return [[to_number(left) + '+' + to_number(right)], {type: 'number'}]
     }
-  }
+  },
+  '*': (left, right) => [to_number(left) + '*' + to_number(right), {type: 'number'}],
+  '/': (left, right) => [to_number(left) + '/' + to_number(right), {type: 'number'}],
+  '-': (left, right) => [to_number(left) + '-' + to_number(right), {type: 'number'}],
 }
 compileEvalFunctions = {
   '': (param) => ['(' + param[0][0] + ')', param[0][1]], // parantheses
