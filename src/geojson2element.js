@@ -1,12 +1,14 @@
 const geojson2elements = require('@geowiki-net/geowiki-api/src/geojson2elements')
 
 function geojson2element (data, options) {
+  const elements = []
+  let element
+
   if (data.type !== 'Feature') {
     throw new Error('Unknown type ' + data.type)
   }
 
-  let element
-  const osm_type = data.properties.osm_type
+  const osmType = data.properties.osm_type
 
   if (!data.geometry) {
     return {}
@@ -33,10 +35,9 @@ function geojson2element (data, options) {
     case 'MultiPolygon':
     case 'Polygon':
     case 'GeometryCollection':
-      const elements = []
       geojson2elements(data, elements, options)
 
-      if (osm_type === 'W') {
+      if (osmType === 'W') {
         element = elements[0]
       } else {
         element = {

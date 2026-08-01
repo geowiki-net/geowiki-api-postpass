@@ -11,6 +11,7 @@
   },
   "scripts": {
     "test": "mocha --bail",
+    "lint": "standard --fix src/*.js",
     "watch-test": "watchify --debug test/00initialize.js test/objectStructure.js -o dist/test.js -v"
   },
   "repository": {
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "mocha": "^11.7.6",
+    "standard": "^17.1.2",
     "watchify": "^4.0.0"
   }
 }

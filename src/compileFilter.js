@@ -3,12 +3,12 @@ const quote = require('./quote')
 const compileFunctions = {
   bbox: (filter) => 'geom && st_setsrid(st_makebox2d(st_makepoint(' + filter.value.minlon + ',' + filter.value.minlat + '), st_makepoint(' + filter.value.maxlon + ',' + filter.value.maxlat + ')), 4326)',
   id: (filter) => 'osm_id=ANY(\'{' + filter.value.join(',') + '}\')',
-  properties: (filter) => [null, {needFilter: true}],
+  properties: (filter) => [null, { needFilter: true }],
   if: (filter) => {
-    const result =  compileEvaluator(filter.value)
-    result[0] = to_boolean(result)
+    const result = compileEvaluator(filter.value)
+    result[0] = toBoolean(result)
     return result
-  },
+  }
 }
 
 const compileOperators = {
@@ -18,13 +18,13 @@ const compileOperators = {
   '~i': '~*',
   '!~': '!~',
   '!~i': '!~*',
-  has: (filter) => 't.tags->>' + quote(filter.key) + "~" + quote('^(.*;|)' + filter.value + '(|;.*)$'),
-  strsearch: (filter) => [null, {needFilter: true}], // TODO
+  has: (filter) => 't.tags->>' + quote(filter.key) + '~' + quote('^(.*;|)' + filter.value + '(|;.*)$'),
+  strsearch: (filter) => [null, { needFilter: true }], // TODO
   has_key: (filter) => 't.tags?' + quote(filter.key),
-  not_exists: (filter) => 'NOT t.tags?' + quote(filter.key),
+  not_exists: (filter) => 'NOT t.tags?' + quote(filter.key)
 }
 
-compileEvalOperators = {
+const compileEvalOperators = {
   '==': '=',
   '!=': '!=',
   '>': '>',
@@ -33,66 +33,66 @@ compileEvalOperators = {
   '<=': '<=',
   '&&': ' AND ',
   '||': ' OR ',
-  '!': (left, right) => ['NOT ' + to_boolean(right), {type: 'boolean'}],
+  '!': (left, right) => ['NOT ' + toBoolean(right), { type: 'boolean' }],
   '+': (left, right) => {
     if (left[1].type === 'string' || right[1].type === 'string') {
-      return [['CONCAT(' + left[0] + ',' + right[0] + ')'], {type: 'string'}]
+      return [['CONCAT(' + left[0] + ',' + right[0] + ')'], { type: 'string' }]
     } else {
-      return [[to_number(left) + '+' + to_number(right)], {type: 'number'}]
+      return [[toNumber(left) + '+' + toNumber(right)], { type: 'number' }]
     }
   },
-  '*': (left, right) => [to_number(left) + '*' + to_number(right), {type: 'number'}],
-  '/': (left, right) => [to_number(left) + '/' + to_number(right), {type: 'number'}],
-  '-': (left, right) => [to_number(left) + '-' + to_number(right), {type: 'number'}],
+  '*': (left, right) => [toNumber(left) + '*' + toNumber(right), { type: 'number' }],
+  '/': (left, right) => [toNumber(left) + '/' + toNumber(right), { type: 'number' }],
+  '-': (left, right) => [toNumber(left) + '-' + toNumber(right), { type: 'number' }],
 }
-compileEvalFunctions = {
+const compileEvalFunctions = {
   '': (param) => ['(' + param[0][0] + ')', param[0][1]], // parantheses
-  'id': (param) => 'osm_id',
-  'type': (param) => "(SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)",
-  'tag': (param) => 't.tags->>' + to_string(param[0]),
-  'is_tag': (param) => 'CASE WHEN t.tags?' + to_string(param[0]) + ' THEN 1 ELSE 0 END',
-  'count_tags': (param) => '(SELECT COUNT(*) FROM jsonb_object_keys(tags))',
-  'number': (param) => {
+  id: (param) => 'osm_id',
+  type: (param) => "(SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)",
+  tag: (param) => 't.tags->>' + toString(param[0]),
+  is_tag: (param) => 'CASE WHEN t.tags?' + toString(param[0]) + ' THEN 1 ELSE 0 END',
+  count_tags: (param) => '(SELECT COUNT(*) FROM jsonb_object_keys(tags))',
+  number: (param) => {
     if (param[0][1].type === 'string') {
-      return ['SUBSTRING(' + param[0][0] + " FROM '^\d+(?:\.\d+)?')", {type: 'number'}]
+      return ['SUBSTRING(' + param[0][0] + " FROM '^\\d+(?:\\.\\d+)?')", { type: 'number' }]
     } else {
-      return to_number(param[0])
+      return toNumber(param[0])
     }
   },
-  'is_number': (param) => {
+  is_number: (param) => {
     if (param[0][1].type === 'string') {
-      return [param[0][0] + "~'^\d+(?:\.\d+)?'", {type: 'boolean'}]
+      return [param[0][0] + "~'^\\d+(?:\\.\\d+)?'", { type: 'boolean' }]
     } else if (param[0][1].type === 'number') {
-      return ['TRUE', {type: 'boolean'}]
+      return ['TRUE', { type: 'boolean' }]
     } else {
-      return ['FALSE', {type: 'boolean'}]
+      return ['FALSE', { type: 'boolean' }]
     }
   },
-  'suffix': (param) => {
+  suffix: (param) => {
     if (param[0][1].type === 'string') {
-      return ['SUBSTRING(' + param[0][0] + " FROM '^(?:\d+(?:\.\d+)?)(.*)$')", {type: 'string'}]
+      return ['SUBSTRING(' + param[0][0] + " FROM '^(?:\\d+(?:\\.\\d+)?)(.*)$')", { type: 'string' }]
     } else {
-      return ['', {type: 'string'}]
+      return ['', { type: 'string' }]
     }
   },
-  'geom': (param) => 'geom',
-  'length': (param) => 'ST_Length(' + (param.length ? param[0] : 'geom') + '::geography)+ST_Perimeter(' + (param.length ? param[0] : 'geom') + '::geography)',
-  'lat': (param) => 'ST_Y(ST_Centroid(' + (param.length ? param[0] : 'geom') + '))',
-  'lon': (param) => 'ST_X(ST_Centroid(' + (param.length ? param[0] : 'geom') + '))',
-  'pt': (param) => 'ST_Point(' + param[1] + ',' + param[0] + ')',
+  geom: (param) => 'geom',
+  length: (param) => 'ST_Length(' + (param.length ? param[0] : 'geom') + '::geography)+ST_Perimeter(' + (param.length ? param[0] : 'geom') + '::geography)',
+  lat: (param) => 'ST_Y(ST_Centroid(' + (param.length ? param[0] : 'geom') + '))',
+  lon: (param) => 'ST_X(ST_Centroid(' + (param.length ? param[0] : 'geom') + '))',
+  pt: (param) => 'ST_Point(' + param[1] + ',' + param[0] + ')'
 }
-compileEvalFunctionTypes = {
-  'id': 'number',
-  'type': 'string',
-  'tag': 'string',
-  'is_tag': 'number',
-  'count_tags': 'number',
-  'geom': 'geometry',
+const compileEvalFunctionTypes = {
+  id: 'number',
+  type: 'string',
+  tag: 'string',
+  is_tag: 'number',
+  count_tags: 'number',
+  geom: 'geometry',
   '': null,
-  'length': 'number',
-  'lat': 'number',
-  'lon': 'number',
-  'pt': 'geometry',
+  length: 'number',
+  lat: 'number',
+  lon: 'number',
+  pt: 'geometry'
 }
 
 /**
@@ -105,7 +105,7 @@ function compileFilter (filter) {
   if (filter.fun) {
     if (!(filter.fun in compileFunctions)) {
       console.error("Don't know how to compile filter function: " + JSON.stringify(filter))
-      return [null, {needFilter: true}]
+      return [null, { needFilter: true }]
     }
     const result = compileFunctions[filter.fun](filter)
     return typeof result === 'string' ? [result, {}] : result
@@ -114,13 +114,13 @@ function compileFilter (filter) {
   }
 
   console.error("Don't know how to compile filter: " + JSON.stringify(filter))
-  return [null, {needFilter: true}]
+  return [null, { needFilter: true }]
 }
 
 function compileOperator (filter) {
   if (filter.op in compileOperators) {
     if (filter.keyRegexp) {
-      return [null, {needFilter: true}]
+      return [null, { needFilter: true }]
     } else if (typeof compileOperators[filter.op] === 'function') {
       const result = compileOperators[filter.op](filter)
       return typeof result === 'string' ? [result, {}] : result
@@ -132,7 +132,7 @@ function compileOperator (filter) {
   }
 
   console.error("Can't compile operator '" + filter.op + "'")
-  return [null, {needFilter: true}]
+  return [null, { needFilter: true }]
 }
 
 function compileEvaluator (filter) {
@@ -142,16 +142,16 @@ function compileEvaluator (filter) {
 
   if ('value' in filter) {
     if (typeof filter.value === 'number') {
-      return [filter.value, {type:'number'}]
+      return [filter.value, { type: 'number' }]
     } else {
-      return [quote(filter.value), {type:'string'}]
+      return [quote(filter.value), { type: 'string' }]
     }
   }
 
   if (filter.op) {
     if (!(filter.op in compileEvalOperators)) {
       console.log('Don\'t know how to handle eval operator "' + filter.op + '"')
-      return [null, {needFilter: true}]
+      return [null, { needFilter: true }]
     }
 
     const left = filter.left ? compileEvaluator(filter.left) : [null, {}]
@@ -161,7 +161,7 @@ function compileEvaluator (filter) {
     if (typeof result === 'string') {
       if (left[0] === null || right[0] === null) {
         console.log('eval operator ' + filter.op + ' can\'t build', filter)
-        return [null, {needFilter: true}]
+        return [null, { needFilter: true }]
       }
       result = [left[0] + result + right[0], {}]
       result[1].type = 'boolean'
@@ -174,17 +174,17 @@ function compileEvaluator (filter) {
 
   if ('fun' in filter) {
     if (!(filter.fun in compileEvalFunctions)) {
-      return [null, {needFilter: true}]
+      return [null, { needFilter: true }]
     }
 
     const params = filter.parameters.map(p => compileEvaluator(p))
 
     const result = compileEvalFunctions[filter.fun](params)
-    return typeof result === 'string' ? [result, {type: compileEvalFunctionTypes[filter.fun]}] : result
+    return typeof result === 'string' ? [result, { type: compileEvalFunctionTypes[filter.fun] }] : result
   }
 }
 
-function to_number (item) {
+function toNumber (item) {
   switch (item[1].type) {
     case 'number':
       return item[0]
@@ -195,7 +195,7 @@ function to_number (item) {
   }
 }
 
-function to_boolean (item) {
+function toBoolean (item) {
   switch (item[1].type) {
     case 'number':
       return item[0] + '<>0'
@@ -206,7 +206,7 @@ function to_boolean (item) {
   }
 }
 
-function to_string (item) {
+function toString (item) {
   switch (item[1].type) {
     case 'number':
     case 'string':

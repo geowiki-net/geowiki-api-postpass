@@ -29,7 +29,7 @@ class DBTypePostpass {
     const stmt = query.getStatement()
     const compileSelectOptions = {}
 
-    let result = this.compileStmt(stmt, options)
+    const result = this.compileStmt(stmt, options)
 
     if ('requestId' in options) {
       result.select.rid = options.requestId + ' as "rid"'
@@ -41,7 +41,6 @@ class DBTypePostpass {
     }
 
     if (options.doneFeatures) {
-      let done = ''
       const donePerType = {}
       Object.values(options.doneFeatures).forEach(item => {
         if (!(item.type in donePerType)) {
@@ -50,7 +49,6 @@ class DBTypePostpass {
         donePerType[item.type].push(item.osm_id)
       })
 
-      const where = []
       Object.entries(donePerType).forEach(([type, ids]) => {
         result.where.push('NOT (osm_type=' + quote(typeOSMToPost[type]) + ' AND osm_id=ANY(ARRAY[' + ids.join(',') + ']))')
       })
@@ -66,14 +64,17 @@ class DBTypePostpass {
   }
 
   compileStmt (stmt, options) {
+    let parts
+    let result
+    let needFilter = false
+
     switch (stmt.constructor.name) {
       case 'FilterQuery':
         return this.compileFilterQuery(stmt, options)
       case 'FilterOr':
-        const parts = stmt.parts.map(part => this.compileStmt(part, options))
-        let needFilter = false
+        parts = stmt.parts.map(part => this.compileStmt(part, options))
 
-        let result = [parts.shift()]
+        result = [parts.shift()]
         result[0].where = [result[0].where]
         parts.forEach(part => {
           if (!result.some(r => {
@@ -81,6 +82,7 @@ class DBTypePostpass {
               r.where.push(part.where)
               return true
             }
+            return false
           })) {
             part.where = [part.where]
             result.push(part)
@@ -122,7 +124,7 @@ class DBTypePostpass {
 
     if (options.properties & GeowikiAPI.GEOM) {
       select.geom = 't.geom'
-    } else if (options.properties & (GeowikiAPI.BBOX|GeowikiAPI.CENTER)) {
+    } else if (options.properties & (GeowikiAPI.BBOX | GeowikiAPI.CENTER)) {
       // split multipolygons in west/east parts, so that we can catch geometries spanning lon180
       select.bboxes = 'ARRAY(SELECT CAST(Box2D(geom) AS text) from ST_Dump(geom)) bboxes'
     }
@@ -142,7 +144,7 @@ class DBTypePostpass {
     }
 
     let [where, filterOptions] = this.compileStmtQuery(stmt)
-    const needFilter = filterOptions.needFilter
+    let needFilter = filterOptions.needFilter
 
     if (stmt.inputSets) {
       const recursingInputSets = Object.entries(stmt.inputSets)
@@ -161,8 +163,7 @@ class DBTypePostpass {
           if (stmt.type === 'nwr') {
             table = r.table
             select = r.select
-          }
-          else if (set[1].set.type !== 'nwr') {
+          } else if (set[1].set.type !== 'nwr') {
             console.log(table, r.table)
             throw new Error('what to do')
           }
@@ -187,13 +188,13 @@ class DBTypePostpass {
     let options = {}
     const filters = []
 
-    stmt.filters.map(filter => {
+    stmt.filters.forEach(filter => {
       const result = compileFilter(filter)
 
       if (result[0] !== null) {
         filters.push(result[0])
       }
-      options = { ...options, ...result[1]}
+      options = { ...options, ...result[1] }
     })
 
     return [filters, options]
@@ -205,21 +206,19 @@ class DBTypePostpass {
 
     fetch(this.url + '/interpreter', {
       method: 'POST',
-      body: new URLSearchParams({data: query, 'options[geojson]': false })
+      body: new URLSearchParams({ data: query, 'options[geojson]': false })
     })
       .then(req => req.text())
       .then(result => {
         try {
           result = JSON.parse(result)
-        }
-        catch (err) {
+        } catch (err) {
           return global.setTimeout(() => callback(new Error('Unexpected result: ' + result)), 0)
         }
 
         try {
           result = convertToOSMJSON(result)
-        }
-        catch (err) {
+        } catch (err) {
           return global.setTimeout(() => callback(err), 0)
         }
 
@@ -256,7 +255,7 @@ function convertToOSMJSON (data) {
     if ('tags' in feature) {
       item.tags = feature.tags
     } else {
-      delete(item.tags)
+      delete (item.tags)
     }
 
     if (feature.bboxes) {
