@@ -33,6 +33,7 @@ const tests = {
   '(if: "2"+3+1)': ["LOWER(CONCAT(CONCAT('2',3),1)) NOT IN ('false', '', '0')",{"type":"string"}],
   '(if: 3+1+"2")': ["LOWER(CONCAT(3+1,'2')) NOT IN ('false', '', '0')",{"type":"string"}],
   '(if: length() > 5)': ["ST_Length(geom::geography)+ST_Perimeter(geom::geography)>5",{"type":"boolean"}],
+  '(if: type()=="way"?is_tag("amenity"):is_tag("highway"))': ["CASE WHEN (SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)='way' THEN CASE WHEN t.tags?'amenity' THEN 1 ELSE 0 END ELSE CASE WHEN t.tags?'highway' THEN 1 ELSE 0 END END<>0",{"type":"number"}],
 }
 
 describe('compileFilter', function () {

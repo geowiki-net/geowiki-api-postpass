@@ -149,5 +149,11 @@
   },
   "node(if: '5'+3+1)": {
     "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE LOWER(CONCAT(CONCAT('5',3),1)) NOT IN ('false', '', '0')"
+  },
+  "nwr(if: type()==\"way\"?is_tag(\"amenity\"):is_tag(\"highway\"))": {
+    "bboxquery": {
+      "expectedElements": 107
+    },
+    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, w.nodes, r.members, NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_pointlinepolygon t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id WHERE CASE WHEN (SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)='way' THEN CASE WHEN t.tags?'amenity' THEN 1 ELSE 0 END ELSE CASE WHEN t.tags?'highway' THEN 1 ELSE 0 END END<>0"
   }
 }

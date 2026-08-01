@@ -44,6 +44,9 @@ const compileEvalOperators = {
   '*': (left, right) => [toNumber(left) + '*' + toNumber(right), { type: 'number' }],
   '/': (left, right) => [toNumber(left) + '/' + toNumber(right), { type: 'number' }],
   '-': (left, right) => [toNumber(left) + '-' + toNumber(right), { type: 'number' }],
+  '?': (left, right, condition) => {
+    return ['CASE WHEN ' + toBoolean(condition) + ' THEN ' + left[0] + ' ELSE ' + right[0] + ' END', {...left[1], ...right[1]}]
+  }
 }
 const compileEvalFunctions = {
   '': (param) => ['(' + param[0][0] + ')', param[0][1]], // parantheses
@@ -156,7 +159,8 @@ function compileEvaluator (filter) {
 
     const left = filter.left ? compileEvaluator(filter.left) : [null, {}]
     const right = filter.right ? compileEvaluator(filter.right) : [null, {}]
-    let result = typeof compileEvalOperators[filter.op] === 'function' ? compileEvalOperators[filter.op](left, right) : compileEvalOperators[filter.op]
+    const condition = filter.condition ? compileEvaluator(filter.condition) : [null, {}]
+    let result = typeof compileEvalOperators[filter.op] === 'function' ? compileEvalOperators[filter.op](left, right, condition) : compileEvalOperators[filter.op]
 
     if (typeof result === 'string') {
       if (left[0] === null || right[0] === null) {
