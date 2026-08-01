@@ -46,10 +46,6 @@ describe('Test compiling filters', function () {
 
   describe('compile filter with tags and members, without bounds', function () {
     Object.entries(queryList).forEach(([query, def]) => {
-      if (!def['tags-members']) {
-        return
-      }
-
       it(query, function () {
         const filter = new Filter(query)
         const result = db.compile(filter, {
@@ -63,10 +59,6 @@ describe('Test compiling filters', function () {
 
   describe('compile filter with tags and members, with bounds', function () {
     Object.entries(queryList).forEach(([query, def]) => {
-      if (!def['tags-members']) {
-        return
-      }
-
       it(query, function () {
         const filter = new Filter(query)
         const result = db.compile(filter, {
