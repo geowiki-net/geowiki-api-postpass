@@ -52,7 +52,30 @@ compileEvalFunctions = {
   'tag': (param) => 't.tags->>' + to_string(param[0]),
   'is_tag': (param) => 'CASE WHEN t.tags?' + to_string(param[0]) + ' THEN 1 ELSE 0 END',
   'count_tags': (param) => '(SELECT COUNT(*) FROM jsonb_object_keys(tags))',
-  'length': (param) => 'ST_Length(geom::geography)+ST_Perimeter(geom::geography)',
+  'number': (param) => {
+    if (param[0][1].type === 'string') {
+      return ['SUBSTRING(' + param[0][0] + " FROM '^\d+(?:\.\d+)?')", {type: 'number'}]
+    } else {
+      return to_number(param[0])
+    }
+  },
+  'is_number': (param) => {
+    if (param[0][1].type === 'string') {
+      return [param[0][0] + "~'^\d+(?:\.\d+)?'", {type: 'boolean'}]
+    } else if (param[0][1].type === 'number') {
+      return ['TRUE', {type: 'boolean'}]
+    } else {
+      return ['FALSE', {type: 'boolean'}]
+    }
+  },
+  'suffix': (param) => {
+    if (param[0][1].type === 'string') {
+      return ['SUBSTRING(' + param[0][0] + " FROM '^(?:\d+(?:\.\d+)?)(.*)$')", {type: 'string'}]
+    } else {
+      return ['', {type: 'string'}]
+    }
+  },
+  'length': (param) => 'ST_Length(' + (param.length ? param[0] : 'geom') + '::geography)+ST_Perimeter(' + (param.length ? param[0] : 'geom') + '::geography)',
 }
 compileEvalFunctionTypes = {
   'id': 'number',
