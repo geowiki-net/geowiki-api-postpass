@@ -1,3 +1,5 @@
+const assert = require('assert')
+
 describe('DBTypePostpass', function () {
   let db
   let geowiki
@@ -5,5 +7,18 @@ describe('DBTypePostpass', function () {
   it('initialize', function () {
     db = require('./src/dbTypePostpass')
     geowiki = require('./src/geowikiAPI')
+  })
+
+  it('test server availability', function (done) {
+    db.execute({subRequests:[{query: 'SELECT 1'}]},
+      (err, result) => {
+        if (err) {
+          assert.fail('Server problem: ' + err.cause)
+          return done()
+        }
+
+        done()
+      }
+    )
   })
 })
