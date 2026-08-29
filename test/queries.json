@@ -11,7 +11,7 @@
   },
   "way": {
     "bboxquery": {
-      "expectedElements": 499
+      "expectedElements": 793
     },
     "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t",
     "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, w.nodes, r.members, NULL AS \"geom\", NULL AS \"bboxes\" FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id"
@@ -111,7 +111,7 @@
   },
   "nwr(if: type() == 'way')": {
     "bboxquery": {
-      "expectedElements": 749
+      "expectedElements": 793
     },
     "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_pointlinepolygon t WHERE (SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)='way'",
     "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, w.nodes, r.members, NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_pointlinepolygon t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id WHERE (SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)='way'"
@@ -158,13 +158,13 @@
   },
   "nwr(if: type()==\"way\" && is_tag(\"amenity\"))": {
     "bboxquery": {
-      "expectedElements": 24
+      "expectedElements": 26
     },
     "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, w.nodes, r.members, NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_pointlinepolygon t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id WHERE (SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)='way' AND CASE WHEN t.tags?'amenity' THEN 1 ELSE 0 END<>0"
   },
   "nwr(if: type()==\"way\"?is_tag(\"amenity\"):is_tag(\"highway\"))": {
     "bboxquery": {
-      "expectedElements": 107
+      "expectedElements": 109
     },
     "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, w.nodes, r.members, NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_pointlinepolygon t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id WHERE CASE WHEN (SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)='way' THEN CASE WHEN t.tags?'amenity' THEN 1 ELSE 0 END ELSE CASE WHEN t.tags?'highway' THEN 1 ELSE 0 END END<>0"
   }
