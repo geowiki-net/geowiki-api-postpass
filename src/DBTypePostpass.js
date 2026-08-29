@@ -21,8 +21,6 @@ class DBTypePostpass {
     this.url = url
     this.geowiki = geowiki
     this.options = options
-
-    this.geowiki.separateSkelGeom = true
   }
 
   compile (query, options) {
@@ -291,7 +289,7 @@ function convertToOSMJSON (data) {
       }
 
       if (feature.geom) {
-        item.databaseGeometry = {
+        item.geometry = {
           type: 'FeatureCollection',
           features: [{
             type: 'Feature',
