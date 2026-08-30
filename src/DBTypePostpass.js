@@ -10,7 +10,7 @@ const typeOSMToPost = { node: 'N', way: 'W', relation: 'R' }
 const tables = {
   nwr: 'postpass_pointlinepolygon',
   node: 'postpass_point',
-  way: "(SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W')",
+  way: "(SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION ALL SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W')",
   relation: "(SELECT osm_id, osm_type, tags, geom FROM postpass_pointlinepolygon WHERE osm_type='R')"
 }
 
@@ -100,7 +100,7 @@ class DBTypePostpass {
             select: Object.fromEntries(allFields.map(f => {
               return [f, f]
             })),
-            table: '(' + result.map(r => compileSelect(r)).join(' UNION ') + ') t',
+            table: '(' + result.map(r => compileSelect(r)).join(' UNION ALL ') + ') t',
             where: [],
             needFilter
           }
