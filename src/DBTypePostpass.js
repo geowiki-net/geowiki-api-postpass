@@ -92,7 +92,14 @@ class DBTypePostpass {
         })
 
         result.forEach(r => {
-          r.where = ['(' + r.where.map(w => '(' + w.join(' AND ') + ')').join(' OR ') + ')']
+          const operands = r.where.map(w => '(' + w.join(' AND ') + ')')
+
+          // if any of the operands (to OR) are TRUE, we don't need the other operands
+          if (operands.filter(o => o === '()').length > 0) {
+            r.where = ['TRUE']
+          } else {
+            r.where = ['(' + operands.join(' OR ') + ')']
+          }
         })
 
         if (result.length > 1) {

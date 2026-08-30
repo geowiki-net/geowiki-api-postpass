@@ -173,5 +173,11 @@
       "expectedElements": 8
     },
     "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t"
+  },
+  "(node[~\"ref$\"~\"8\"];node[amenity];);": {
+    "bboxquery": {
+      "expectedElements": 30
+    },
+    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE TRUE"
   }
 }
