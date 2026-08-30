@@ -18,7 +18,7 @@ const tests = {
   '(1,1,2,2)': ["geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)",{}],
   '(1234)': ["osm_id=ANY('{1234}')",{}],
   '(id:1,2,3)': ["osm_id=ANY('{1,2,3}')",{}],
-  '(properties:63)': [null,{"needFilter":true}],
+  '(properties:63)': [null,{}],
   '(if: t["name"]=="foo")': ["t.tags->>'name'='foo'",{"type": "boolean"}],
   '(if: t["name"]==t["eman"])': ["t.tags->>'name'=t.tags->>'eman'",{"type": "boolean"}],
   '(if: !1)': ["NOT 1<>0",{"type":"boolean"}],

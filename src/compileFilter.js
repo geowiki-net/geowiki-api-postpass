@@ -3,7 +3,7 @@ const quote = require('./quote')
 const compileFunctions = {
   bbox: (filter) => 'geom && st_setsrid(st_makebox2d(st_makepoint(' + filter.value.minlon + ',' + filter.value.minlat + '), st_makepoint(' + filter.value.maxlon + ',' + filter.value.maxlat + ')), 4326)',
   id: (filter) => 'osm_id=ANY(\'{' + filter.value.join(',') + '}\')',
-  properties: (filter) => [null, { needFilter: true }],
+  properties: (filter) => [null, {}],
   if: (filter) => {
     const result = compileEvaluator(filter.value)
     result[0] = toBoolean(result)
