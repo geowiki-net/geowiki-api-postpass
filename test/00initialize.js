@@ -10,7 +10,7 @@ describe('DBTypePostpass', function () {
   })
 
   it('test server availability', function (done) {
-    db.execute({subRequests:[{query: 'SELECT 1'}]},
+    db.execute({subRequests:[{parts:[{query: 'SELECT 1'}]}]},
       (err, result) => {
         if (err) {
           assert.fail('Server problem: ' + err.cause)

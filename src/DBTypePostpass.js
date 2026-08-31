@@ -207,7 +207,7 @@ class DBTypePostpass {
 
   execute (context, callback) {
     const query =
-      context.subRequests.map(c => c.query).join('\nUNION ALL\n')
+      context.subRequests.map(c => c.parts.map(p => p.query).join('\nUNION ALL\n')).join('\nUNION ALL\n')
 
     fetch(this.url + '/interpreter', {
       method: 'POST',
