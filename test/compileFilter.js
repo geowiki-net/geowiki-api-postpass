@@ -40,7 +40,7 @@ describe('compileFilter', function () {
   Object.entries(tests).forEach(([query, expected]) => {
     it(query, function () {
       const filter = new Filter('nwr' + query)
-      const actual = compileFilter(filter.script[0].filters[0])
+      const actual = compileFilter(filter.script[0].filters[0], {tableAlias: 't'})
 
       assert.deepEqual(actual, expected)
     })

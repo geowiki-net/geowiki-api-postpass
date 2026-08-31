@@ -4,8 +4,8 @@ const compileFunctions = {
   bbox: (filter) => 'geom && st_setsrid(st_makebox2d(st_makepoint(' + filter.value.minlon + ',' + filter.value.minlat + '), st_makepoint(' + filter.value.maxlon + ',' + filter.value.maxlat + ')), 4326)',
   id: (filter) => 'osm_id=ANY(\'{' + filter.value.join(',') + '}\')',
   properties: (filter) => [null, {}],
-  if: (filter) => {
-    const result = compileEvaluator(filter.value)
+  if: (filter, options) => {
+    const result = compileEvaluator(filter.value, options)
     result[0] = toBoolean(result)
     return result
   }
@@ -18,10 +18,10 @@ const compileOperators = {
   '~i': '~*',
   '!~': '!~',
   '!~i': '!~*',
-  has: (filter) => 't.tags->>' + quote(filter.key) + '~' + quote('^(.*;|)' + filter.value + '(|;.*)$'),
+  has: (filter, options) => options.tableAlias + '.tags->>' + quote(filter.key) + '~' + quote('^(.*;|)' + filter.value + '(|;.*)$'),
   strsearch: (filter) => [null, { needFilter: true }], // TODO
-  has_key: (filter) => 't.tags?' + quote(filter.key),
-  not_exists: (filter) => 'NOT t.tags?' + quote(filter.key)
+  has_key: (filter, options) => options.tableAlias + '.tags?' + quote(filter.key),
+  not_exists: (filter, options) => 'NOT ' + options.tableAlias + '.tags?' + quote(filter.key)
 }
 
 const compileEvalOperators = {
@@ -52,9 +52,9 @@ const compileEvalFunctions = {
   '': (param) => ['(' + param[0][0] + ')', param[0][1]], // parantheses
   id: (param) => 'osm_id',
   type: (param) => "(SELECT v FROM (VALUES('N','node'),('W','way'),('R','relation'))t(t,v) where t=osm_type)",
-  tag: (param) => 't.tags->>' + toString(param[0]),
-  is_tag: (param) => 'CASE WHEN t.tags?' + toString(param[0]) + ' THEN 1 ELSE 0 END',
-  count_tags: (param) => '(SELECT COUNT(*) FROM jsonb_object_keys(tags))',
+  tag: (param, options) => options.tableAlias + '.tags->>' + toString(param[0]),
+  is_tag: (param, options) => 'CASE WHEN ' + options.tableAlias + '.tags?' + toString(param[0]) + ' THEN 1 ELSE 0 END',
+  count_tags: (param, options) => '(SELECT COUNT(*) FROM jsonb_object_keys(' + options.tableAlias + '.tags))',
   number: (param) => {
     if (param[0][1].type === 'string') {
       return ['SUBSTRING(' + param[0][0] + " FROM '^\\d+(?:\\.\\d+)?')", { type: 'number' }]
@@ -104,31 +104,31 @@ const compileEvalFunctionTypes = {
  *   options           // {needFilter: true} <- do not return false values, to not overwrite other options
  * ]
  */
-function compileFilter (filter) {
+function compileFilter (filter, options) {
   if (filter.fun) {
     if (!(filter.fun in compileFunctions)) {
       console.error("Don't know how to compile filter function: " + JSON.stringify(filter))
       return [null, { needFilter: true }]
     }
-    const result = compileFunctions[filter.fun](filter)
+    const result = compileFunctions[filter.fun](filter, options)
     return typeof result === 'string' ? [result, {}] : result
   } else if (filter.op) {
-    return compileOperator(filter)
+    return compileOperator(filter, options)
   }
 
   console.error("Don't know how to compile filter: " + JSON.stringify(filter))
   return [null, { needFilter: true }]
 }
 
-function compileOperator (filter) {
+function compileOperator (filter, options) {
   if (filter.op in compileOperators) {
     if (filter.keyRegexp) {
       return [null, { needFilter: true }]
     } else if (typeof compileOperators[filter.op] === 'function') {
-      const result = compileOperators[filter.op](filter)
+      const result = compileOperators[filter.op](filter, options)
       return typeof result === 'string' ? [result, {}] : result
     } else {
-      const column = 't.tags->>' + quote(filter.key)
+      const column = options.tableAlias + '.tags->>' + quote(filter.key)
       const value = filter.value ? quote(filter.value) : null
       return [column + compileOperators[filter.op] + value, {}]
     }
@@ -138,7 +138,7 @@ function compileOperator (filter) {
   return [null, { needFilter: true }]
 }
 
-function compileEvaluator (filter) {
+function compileEvaluator (filter, options) {
   if (filter.data) {
     filter = filter.data
   }
@@ -157,9 +157,9 @@ function compileEvaluator (filter) {
       return [null, { needFilter: true }]
     }
 
-    const left = filter.left ? compileEvaluator(filter.left) : [null, {}]
-    const right = filter.right ? compileEvaluator(filter.right) : [null, {}]
-    const condition = filter.condition ? compileEvaluator(filter.condition) : [null, {}]
+    const left = filter.left ? compileEvaluator(filter.left, options) : [null, {}]
+    const right = filter.right ? compileEvaluator(filter.right, options) : [null, {}]
+    const condition = filter.condition ? compileEvaluator(filter.condition, options) : [null, {}]
     let result = typeof compileEvalOperators[filter.op] === 'function' ? compileEvalOperators[filter.op](left, right, condition) : compileEvalOperators[filter.op]
 
     if (typeof result === 'string') {
@@ -183,7 +183,7 @@ function compileEvaluator (filter) {
 
     const params = filter.parameters.map(p => compileEvaluator(p))
 
-    const result = compileEvalFunctions[filter.fun](params)
+    const result = compileEvalFunctions[filter.fun](params, options)
     return typeof result === 'string' ? [result, { type: compileEvalFunctionTypes[filter.fun] }] : result
   }
 }

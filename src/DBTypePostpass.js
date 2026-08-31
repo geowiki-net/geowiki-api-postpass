@@ -127,23 +127,31 @@ class DBTypePostpass {
     }
   }
 
+  /**
+   * @param [options.tableAlias=t] which name to be used as alias
+   */
   compileFilterQuery (stmt, options) {
+    if (!options.tableAlias) {
+      options.tableAlias = 't'
+    }
+
+    const tableAlias = options.tableAlias
     // postpass queries always require geom
     let select = {
-      osm_id: 't.osm_id',
-      osm_type: 't.osm_type'
+      osm_id: `${tableAlias}.osm_id`,
+      osm_type: `${tableAlias}.osm_type`
     }
-    let table = tables[stmt.type] + ' t'
+    let table = tables[stmt.type] + ' ' + tableAlias
 
     if (options.properties & GeowikiAPI.GEOM) {
-      select.geom = 't.geom'
+      select.geom = `${tableAlias}.geom`
     } else if (options.properties & (GeowikiAPI.BBOX | GeowikiAPI.CENTER)) {
       // split multipolygons in west/east parts, so that we can catch geometries spanning lon180
-      select.bboxes = 'ARRAY(SELECT CAST(Box2D(geom) AS text) from ST_Dump(geom)) bboxes'
+      select.bboxes = `ARRAY(SELECT CAST(Box2D(geom) AS text) from ST_Dump(${tableAlias}.geom)) bboxes`
     }
 
     if (options.properties & GeowikiAPI.TAGS) {
-      select.tags = 't.tags'
+      select.tags = `${tableAlias}.tags`
     }
     if (options.properties & GeowikiAPI.MEMBERS) {
       if (stmt.type === 'node') {
@@ -152,11 +160,11 @@ class DBTypePostpass {
       } else {
         select.nodes = 'w.nodes'
         select.members = 'r.members'
-        table += " LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id"
+        table += ` LEFT JOIN planet_osm_ways w ON ${tableAlias}.osm_type='W' AND ${tableAlias}.osm_id=w.id LEFT JOIN planet_osm_rels r ON ${tableAlias}.osm_type='R' AND ${tableAlias}.osm_id=r.id`
       }
     }
 
-    let [where, filterOptions] = this.compileStmtQuery(stmt)
+    let [where, filterOptions] = this.compileStmtQuery(stmt, options)
     let needFilter = filterOptions.needFilter
 
     if (stmt.inputSets) {
@@ -197,20 +205,20 @@ class DBTypePostpass {
     }
   }
 
-  compileStmtQuery (stmt) {
-    let options = {}
+  compileStmtQuery (stmt, options) {
+    let stmtOptions = {}
     const filters = []
 
     stmt.filters.forEach(filter => {
-      const result = compileFilter(filter)
+      const result = compileFilter(filter, options)
 
       if (result[0] !== null) {
         filters.push(result[0])
       }
-      options = { ...options, ...result[1] }
+      stmtOptions = { ...stmtOptions, ...result[1] }
     })
 
-    return [filters, options]
+    return [filters, stmtOptions]
   }
 
   execute (context, callback) {
