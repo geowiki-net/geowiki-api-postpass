@@ -1,6 +1,7 @@
 const assert = require('assert')
 const geowiki = require('./src/geowikiAPI')
 const queryList = require('./queries.json')
+const getRequests = require('./get.json')
 
 describe('Requests', function () {
   describe('BBoxQuery', function () {
@@ -31,6 +32,45 @@ describe('Requests', function () {
               }
             } else {
               console.log(JSON.stringify(result, null, '  '))
+            }
+
+            done()
+          }
+        )
+      })
+    })
+  })
+
+  describe('Get', function () {
+    Object.entries(getRequests).forEach(([query, def]) => {
+      it(query, function (done) {
+        geowiki.clearCache()
+        geowiki.get(
+          query.split(/,/),
+          {
+            out: 'json',
+            outOptions: 'tags',
+            each: (ob) => {
+              // console.log('each', ob.id, ob.tags)
+            }
+          },
+          (err, result) => {
+            if (err) { return done(err) }
+
+            if (def.expectedIds) {
+              assert.equal(result.elements.length, def.expectedIds.length, 'Wrong count of returned elements')
+
+              const unexpected = []
+              result.elements.forEach(el => {
+                const id = el.type.substr(0, 1) + el.id
+                if (!def.expectedIds.includes(id)) {
+                  unexpected.push(id)
+                }
+              })
+
+              if (unexpected.length) {
+                assert.fail('Returning unexpected elements: ' + unexpected.join(', '))
+              }
             }
 
             done()
