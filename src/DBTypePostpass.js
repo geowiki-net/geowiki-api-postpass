@@ -114,6 +114,14 @@ class DBTypePostpass {
         } else {
           return result[0]
         }
+      case 'FilterDiff':
+        parts = stmt.parts.map(part => this.compileStmt(part, options))
+
+        if (parts[0].table === parts[1].table) {
+          const result = parts[0]
+          result.where.push('NOT (' + parts[1].where.join(' AND ') + ')')
+          return result
+        }
       default:
         throw new Error("Can't compile filter type '" + stmt.constructor.name + "'")
     }
