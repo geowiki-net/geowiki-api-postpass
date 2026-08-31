@@ -102,13 +102,30 @@
     "tags": "SELECT osm_id, osm_type, tags, nodes, members, geom, bboxes FROM (SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION ALL SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t WHERE ((t.tags->>'amenity'='restaurant')) UNION ALL SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE ((t.tags->>'amenity'='bar'))) t",
     "tags-members": "SELECT osm_id, osm_type, tags, nodes, members, geom, bboxes FROM (SELECT t.osm_id, t.osm_type, t.tags, w.nodes, r.members, NULL AS \"geom\", NULL AS \"bboxes\" FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION ALL SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id WHERE ((t.tags->>'amenity'='restaurant')) UNION ALL SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE ((t.tags->>'amenity'='bar'))) t"
   },
-  "(way[amenity=restaurant];-way[cuisine][a];)": {
-    "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION ALL SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t WHERE t.tags->>'amenity'='restaurant' AND NOT (t.tags?'cuisine' AND t.tags?'a')",
-    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, w.nodes, r.members, NULL AS \"geom\", NULL AS \"bboxes\" FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION ALL SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id WHERE t.tags->>'amenity'='restaurant' AND NOT (t.tags?'cuisine' AND t.tags?'a')"
+  "(way[amenity=restaurant];-way[cuisine];)": {
+    "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION ALL SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t WHERE t.tags->>'amenity'='restaurant' AND NOT (t.tags?'cuisine')",
+    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, w.nodes, r.members, NULL AS \"geom\", NULL AS \"bboxes\" FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION ALL SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id WHERE t.tags->>'amenity'='restaurant' AND NOT (t.tags?'cuisine')"
   },
   "(way;-way[cuisine];)": {
+    "bboxquery": {
+      "expectedElements": 792
+    },
     "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION ALL SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t WHERE NOT (t.tags?'cuisine')",
     "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, w.nodes, r.members, NULL AS \"geom\", NULL AS \"bboxes\" FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION ALL SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id WHERE NOT (t.tags?'cuisine')"
+  },
+  "(nwr[amenity=restaurant];-node[cuisine];)": {
+    "bboxquery": {
+      "expectedElements": 7
+    },
+    "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_pointlinepolygon t LEFT JOIN postpass_point p ON t.osm_type=p.osm_type AND t.osm_id=p.osm_id WHERE t.tags->>'amenity'='restaurant' AND (p.osm_id IS NULL OR NOT (p.tags?'cuisine'))",
+    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, w.nodes, r.members, NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_pointlinepolygon t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id LEFT JOIN postpass_point p ON t.osm_type=p.osm_type AND t.osm_id=p.osm_id WHERE t.tags->>'amenity'='restaurant' AND (p.osm_id IS NULL OR NOT (p.tags?'cuisine'))"
+  },
+  "node[amenity=restaurant]->.a;(nwr.a;-nwr.a[cuisine];)": {
+    "bboxquery": {
+      "expectedElements": 5
+    },
+    "tags": "SELECT t.osm_id, t.osm_type, t.tags, NULL AS \"nodes\", NULL AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE t.tags->>'amenity'='restaurant' AND NOT (t.tags->>'amenity'='restaurant' AND t.tags?'cuisine')",
+    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE t.tags->>'amenity'='restaurant' AND NOT (t.tags->>'amenity'='restaurant' AND t.tags?'cuisine')"
   },
   "way(if: id() == 4583259)": {
     "bboxquery": {
