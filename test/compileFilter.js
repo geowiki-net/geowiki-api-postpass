@@ -15,7 +15,7 @@ const tests = {
   '[!name]': ["NOT t.tags?'name'", {}],
   '[name^foo]': ["t.tags->>'name'~'^(.*;|)foo(|;.*)$'", {}],
   '[name%foo]': [null,{"needFilter":true}],
-  '(1,1,2,2)': ["geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)",{}],
+  '(1,1,2,2)': ["t.geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)",{}],
   '(1234)': ["osm_id=ANY('{1234}')",{}],
   '(id:1,2,3)': ["osm_id=ANY('{1,2,3}')",{}],
   '(properties:63)': [null,{}],
