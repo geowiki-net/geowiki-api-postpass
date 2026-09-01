@@ -339,7 +339,7 @@ function compileSelect (def, options = {}) {
     .map(f => f in def.select ? def.select[f] : 'NULL AS "' + f + '"')
     .join(', ')
 
-  let result = 'SELECT ' + select + ' FROM ' + def.table
+  let result = 'SELECT ' + (options.distinct ? 'DISTINCT ' : '') + select + ' FROM ' + def.table
   if (def.where && def.where.length) {
     result += ' WHERE ' + def.where.join(' AND ')
   }
