@@ -204,5 +204,11 @@
       "expectedElements": 30
     },
     "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t WHERE TRUE"
+  },
+  "way[highway=primary];node(w)[highway=crossing];": {
+    "bboxquery": {
+      "expectedElements": 0
+    },
+    "tags-members": "SELECT t.osm_id, t.osm_type, t.tags, '{}'::bigint[] AS \"nodes\", '{}'::jsonb AS \"members\", NULL AS \"geom\", NULL AS \"bboxes\" FROM postpass_point t JOIN (SELECT DISTINCT UNNEST(w.nodes) osm_id, 'N' osm_type FROM (SELECT osm_id, osm_type, tags, geom FROM postpass_line WHERE osm_type='W' UNION ALL SELECT osm_id, osm_type, tags, geom FROM postpass_polygon WHERE osm_type='W') t LEFT JOIN planet_osm_ways w ON t.osm_type='W' AND t.osm_id=w.id LEFT JOIN planet_osm_rels r ON t.osm_type='R' AND t.osm_id=r.id WHERE t.tags->>'highway'='primary') r0 ON t.osm_id=r0.osm_id AND t.osm_type=r0.osm_type WHERE t.tags->>'highway'='crossing'"
   }
 }
