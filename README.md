@@ -1,6 +1,17 @@
 # geowiki-api-postpass
 Use GeowikiAPI with a postpass backend
 
+With [https://github.com/geowiki-net/geowiki-api Geowiki API] and this module you can query a [https://github.com/woodpeck/postpass Postpass] server with Overpass QL queries and will return OSMJSON, OSMXML or GeoJSON responses. You can even emulate an Overpass API server (although there are some limitations).
+
+The current version does not yet support recursive queries (e.g. nodes of way: `way[...];node(w);`, relations members: `relation[...];nwr(r:"outer");`).
+
+## LIMITATIONS of this approach
+The postpass database modifies the data on import. Therefore some information gets lost and can therefore not be returned by geowiki-api-postpass.
+
+* Meta data of map objects (timestamp, changeset, user, version)
+* The 'type' tag of relations is stripped. For multipolygons this is restored, although it might also by type=boundary. You can not query for tag 'type'.
+* Only multipolygon 
+
 ## INSTALLATION
 ### Installing Postpass server with database locally
 ```sh
