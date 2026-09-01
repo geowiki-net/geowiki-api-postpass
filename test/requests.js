@@ -45,15 +45,21 @@ describe('Requests', function () {
     Object.entries(getRequests).forEach(([query, def]) => {
       it(query, function (done) {
         geowiki.clearCache()
+        const options = {
+          out: 'json',
+          outOptions: 'tags',
+          each: (ob) => {
+            // console.log('each', ob.id, ob.tags)
+          }
+        }
+
+        if (def.bounds) {
+          options.bounds = def.bounds
+        }
+
         geowiki.get(
           query.split(/,/),
-          {
-            out: 'json',
-            outOptions: 'tags',
-            each: (ob) => {
-              // console.log('each', ob.id, ob.tags)
-            }
-          },
+          options,
           (err, result) => {
             if (err) { return done(err) }
 

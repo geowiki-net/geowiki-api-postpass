@@ -5,5 +5,10 @@
   "n685168,n16614536,n12345": {
     "_": "n685168 does exist, but does not have tags; n12345 does not exist",
     "expectedIds": ["n16614536"]
+  },
+  "n647991,n9697683": {
+    "_": "",
+    "bounds": {"minlon":16.2623006,"minlat":48.201553,"maxlon":16.2623009,"maxlat":48.201555},
+    "expectedIds": ["n647991"]
   }
 }
