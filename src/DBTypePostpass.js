@@ -191,16 +191,29 @@ class DBTypePostpass {
                 r.select.geom = `(ST_DumpPoints(${tableAlias}.geom)).geom geom`
               }
               break
+            case 'bn':
+              r.select = {
+                osm_id: 'osm_id',
+                osm_type: "'N' osm_type",
+              }
+              break
             default:
               throw new Error('unsupported recursing type "' + set[1].recurse + '"')
           }
 
-          const rtable = compileSelect(r, { fields: Object.keys(r.select), distinct: true })
-          table += ' RIGHT JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.osm_id AND ' + tableAlias + '.osm_type=r' + i + '.osm_type'
-          select.osm_id = `r${i}.osm_id`
-          select.osm_type = `r${i}.osm_type`
-          if (options.properties & GeowikiAPI.GEOM) {
-            select.geom = `r${i}.geom`
+          if (set[1].recurse === 'w') {
+            const rtable = compileSelect(r, { fields: Object.keys(r.select), distinct: true })
+            table += ' RIGHT JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.osm_id AND ' + tableAlias + '.osm_type=r' + i + '.osm_type'
+
+            select.osm_id = `r${i}.osm_id`
+            select.osm_type = `r${i}.osm_type`
+            if (options.properties & GeowikiAPI.GEOM) {
+              select.geom = `r${i}.geom`
+            }
+          }
+          else if (set[1].recurse === 'bn') {
+            const rtable = compileSelect(r, { fields: Object.keys(r.select) })
+            table += ' JOIN (' + rtable + ') r' + i + ' ON r' + i + '.osm_id=ANY(nodes) AND ' + tableAlias + ".osm_type='W'"
           }
         })
       }
@@ -213,7 +226,6 @@ class DBTypePostpass {
             table = r.table
             select = r.select
           } else if (set[1].set.type !== 'nwr') {
-            console.log(table, r.table)
             throw new Error('what to do')
           }
         }
