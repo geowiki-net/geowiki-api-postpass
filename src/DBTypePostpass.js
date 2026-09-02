@@ -136,6 +136,8 @@ class DBTypePostpass {
    * @param [options.tableAlias=t] which name to be used as alias
    */
   compileFilterQuery (stmt, options) {
+    let distinct = false
+
     if (!options.tableAlias) {
       options.tableAlias = 't'
     }
@@ -240,6 +242,7 @@ class DBTypePostpass {
 
     return {
       select,
+      distinct,
       table,
       where,
       needFilter
