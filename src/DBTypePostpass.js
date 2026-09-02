@@ -215,8 +215,30 @@ class DBTypePostpass {
             }
           }
           else if (set[1].recurse === 'bn') {
+            distinct = true
             const rtable = compileSelect(r, { fields: Object.keys(r.select) })
-            table += ' JOIN (' + rtable + ') r' + i + ' ON r' + i + '.osm_id=ANY(nodes) AND ' + tableAlias + ".osm_type='W'"
+            if (stmt.type !== 'relation') {
+              table += ' LEFT JOIN LATERAL UNNEST(nodes) AS n' + i +'(ref) ON TRUE'
+            }
+            if (stmt.type !== 'way') {
+              table += ' LEFT JOIN LATERAL jsonb_to_recordset(members) AS m' + i + '(ref BIGINT, role TEXT, type TEXT) ON TRUE'
+            }
+
+            table += ' JOIN (' + rtable + ') r' + i + ' ON '
+
+            const on = []
+            if (stmt.type !== 'relation') {
+              on.push('r' + i + '.osm_id=n' + i + '.ref AND r' + i + ".osm_type='N'")
+            }
+            if (stmt.type !== 'way') {
+              on.push('r' + i + '.osm_id=m' + i + '.ref AND r' + i + '.osm_type=m' + i + '.type')
+            }
+
+            if (on.length > 1) {
+              table += on.map(v => '(' + v + ')').join(' OR ')
+            } else {
+              table += on[0]
+            }
           }
         })
       }
