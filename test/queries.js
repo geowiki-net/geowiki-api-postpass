@@ -46,6 +46,10 @@ describe('Test compiling filters', function () {
 
   describe('compile filter with tags and members, without bounds', function () {
     Object.entries(queryList).forEach(([query, def]) => {
+      if (!def['tags-members']) {
+        return
+      }
+
       it(query, function () {
         const filter = new Filter(query)
         const result = db.compile(filter, {
@@ -59,6 +63,10 @@ describe('Test compiling filters', function () {
 
   describe('compile filter with tags and members, with bounds', function () {
     Object.entries(queryList).forEach(([query, def]) => {
+      if (!def['tags-members']) {
+        return
+      }
+
       it(query, function () {
         const filter = new Filter(query)
         const result = db.compile(filter, {
@@ -70,6 +78,23 @@ describe('Test compiling filters', function () {
           (def['tags-members'].match(/(r\.id|t)$/) ? ' WHERE' : ' AND') +
           ' geom && st_setsrid(st_makebox2d(st_makepoint(1,1), st_makepoint(2,2)), 4326)'
         assert.equal(result[0], expected)
+      })
+    })
+  })
+
+  describe('compile filter with ALL', function () {
+    Object.entries(queryList).forEach(([query, def]) => {
+      if (!('all' in def)) {
+        return
+      }
+
+      it(query, function () {
+        const filter = new Filter(query)
+        const result = db.compile(filter, {
+          properties: defines.ALL
+        })
+
+        assert.equal(result[0], def['all'])
       })
     })
   })
