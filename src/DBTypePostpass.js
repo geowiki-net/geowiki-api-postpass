@@ -185,15 +185,23 @@ class DBTypePostpass {
             case 'w':
               r.select = {
                 osm_id: 'UNNEST(w.nodes) osm_id',
-                osm_type: "'N' osm_type"
+                osm_type: "'N' osm_type",
+              }
+              if (options.properties & (GeowikiAPI.GEOM|GeowikiAPI.CENTER|GeowikiAPI.BBOX)) {
+                r.select.geom = `(ST_DumpPoints(${tableAlias}.geom)).geom geom`
               }
               break
             default:
               throw new Error('unsupported recursing type "' + set[1].recurse + '"')
           }
 
-          const rtable = compileSelect(r, { fields: ['osm_id', 'osm_type'], distinct: true })
-          table += ' JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.osm_id AND ' + tableAlias + '.osm_type=r' + i + '.osm_type'
+          const rtable = compileSelect(r, { fields: Object.keys(r.select), distinct: true })
+          table += ' RIGHT JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.osm_id AND ' + tableAlias + '.osm_type=r' + i + '.osm_type'
+          select.osm_id = `r${i}.osm_id`
+          select.osm_type = `r${i}.osm_type`
+          if (options.properties & GeowikiAPI.GEOM) {
+            select.geom = `r${i}.geom`
+          }
         })
       }
 
