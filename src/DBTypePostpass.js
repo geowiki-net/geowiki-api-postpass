@@ -227,11 +227,11 @@ class DBTypePostpass {
             table += ' JOIN (' + rtable + ') r' + i + ' ON '
 
             const on = []
-            if (stmt.type !== 'relation') {
+            if (stmt.type !== 'relation' && !set[1].role) {
               on.push('r' + i + '.osm_id=n' + i + '.ref AND r' + i + ".osm_type='N'")
             }
             if (stmt.type !== 'way') {
-              on.push('r' + i + '.osm_id=m' + i + '.ref AND r' + i + '.osm_type=m' + i + '.type')
+              on.push('r' + i + '.osm_id=m' + i + '.ref AND r' + i + '.osm_type=m' + i + '.type' + ('role' in set[1] ? ' AND m' + i + '.role=' + quote(set[1].role) : ''))
             }
 
             if (on.length > 1) {
