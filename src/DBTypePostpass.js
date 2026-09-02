@@ -202,7 +202,8 @@ class DBTypePostpass {
           }
 
           if (set[1].recurse === 'w') {
-            const rtable = compileSelect(r, { fields: Object.keys(r.select), distinct: true })
+            r.distinct = true
+            const rtable = compileSelect(r, { fields: Object.keys(r.select) })
             table += ' RIGHT JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.osm_id AND ' + tableAlias + '.osm_type=r' + i + '.osm_type'
 
             select.osm_id = `r${i}.osm_id`
@@ -374,7 +375,7 @@ function compileSelect (def, options = {}) {
     .map(f => f in def.select ? def.select[f] : 'NULL AS "' + f + '"')
     .join(', ')
 
-  let result = 'SELECT ' + (options.distinct ? 'DISTINCT ' : '') + select + ' FROM ' + def.table
+  let result = 'SELECT ' + (def.distinct ? 'DISTINCT ' : '') + select + ' FROM ' + def.table
   if (def.where && def.where.length) {
     result += ' WHERE ' + def.where.join(' AND ')
   }
