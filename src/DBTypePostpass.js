@@ -137,6 +137,7 @@ class DBTypePostpass {
    */
   compileFilterQuery (stmt, options) {
     let distinct = false
+    let recurseTables = ''
 
     if (!options.tableAlias) {
       options.tableAlias = 't'
@@ -206,7 +207,7 @@ class DBTypePostpass {
           if (set[1].recurse === 'w') {
             r.distinct = true
             const rtable = compileSelect(r, { fields: Object.keys(r.select) })
-            table += ' JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.osm_id AND ' + tableAlias + '.osm_type=r' + i + '.osm_type'
+            recurseTables += ' JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.osm_id AND ' + tableAlias + '.osm_type=r' + i + '.osm_type'
 
             select.osm_id = `r${i}.osm_id`
             select.osm_type = `r${i}.osm_type`
@@ -218,13 +219,13 @@ class DBTypePostpass {
             distinct = true
             const rtable = compileSelect(r, { fields: Object.keys(r.select) })
             if (stmt.type !== 'relation') {
-              table += ' LEFT JOIN LATERAL UNNEST(nodes) AS n' + i +'(ref) ON TRUE'
+              recurseTables += ' LEFT JOIN LATERAL UNNEST(nodes) AS n' + i +'(ref) ON TRUE'
             }
             if (stmt.type !== 'way') {
-              table += ' LEFT JOIN LATERAL jsonb_to_recordset(members) AS m' + i + '(ref BIGINT, role TEXT, type TEXT) ON TRUE'
+              recurseTables += ' LEFT JOIN LATERAL jsonb_to_recordset(members) AS m' + i + '(ref BIGINT, role TEXT, type TEXT) ON TRUE'
             }
 
-            table += ' JOIN (' + rtable + ') r' + i + ' ON '
+            recurseTables += ' JOIN (' + rtable + ') r' + i + ' ON '
 
             const on = []
             if (stmt.type !== 'relation' && !set[1].role) {
@@ -235,9 +236,9 @@ class DBTypePostpass {
             }
 
             if (on.length > 1) {
-              table += on.map(v => '(' + v + ')').join(' OR ')
+              recurseTables += on.map(v => '(' + v + ')').join(' OR ')
             } else {
-              table += on[0]
+              recurseTables += on[0]
             }
           }
         })
@@ -261,6 +262,8 @@ class DBTypePostpass {
         }
       })
     }
+
+    table += recurseTables
 
     return {
       select,
