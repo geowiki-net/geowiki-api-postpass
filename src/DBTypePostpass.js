@@ -191,6 +191,10 @@ class DBTypePostpass {
           const revOptions = {...options, tableAlias: 't' + i}
           if (['w', 'r'].includes(set[1].recurse)) {
             revOptions.properties |= GeowikiAPI.MEMBERS
+
+            if (set[1].recurse === 'r') {
+              revOptions.requireMemberUnnest = true
+            }
           }
 
           const r = this.compileStmt(set[1].set, revOptions)
@@ -208,9 +212,9 @@ class DBTypePostpass {
               r.select = {
                 osm_id: `${revOptions.tableAlias}.osm_id`,
                 osm_type: `${revOptions.tableAlias}.osm_type`,
-                ref: `m${i}.ref`,
-                type: `m${i}.type`,
-                role: `m${i}.role`
+                ref: `${revOptions.tableAlias}m.ref`,
+                type: `${revOptions.tableAlias}m.type`,
+                role: `${revOptions.tableAlias}m.role`
               }
               break
             case 'bn':
@@ -243,7 +247,6 @@ class DBTypePostpass {
           }
           else if (set[1].recurse === 'r') {
             r.distinct = true
-            r.table += ` LEFT JOIN LATERAL jsonb_to_recordset(${revOptions.tableAlias}r.members) AS m${i}(ref BIGINT, role TEXT, type TEXT) ON TRUE`
             let rtable = compileSelect(r, { fields: Object.keys(r.select) })
             recurseTables += ' JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.ref AND ' + tableAlias + '.osm_type=r' + i + '.type'
           }
@@ -313,9 +316,13 @@ class DBTypePostpass {
       })
     }
 
-    if (requireMemberTables) {
+    if (requireMemberTables || options.requireMemberUnnest) {
       table += ` LEFT JOIN planet_osm_ways ${tableAlias}w ON ${tableAlias}.osm_type='W' AND ${tableAlias}.osm_id=${tableAlias}w.id LEFT JOIN planet_osm_rels ${tableAlias}r ON ${tableAlias}.osm_type='R' AND ${tableAlias}.osm_id=${tableAlias}r.id`
       requireMemberTables = false
+
+      if (options.requireMemberUnnest) {
+        table += ` LEFT JOIN LATERAL jsonb_to_recordset(${tableAlias}r.members) AS ${tableAlias}m(ref BIGINT, role TEXT, type TEXT) ON TRUE`
+      }
     }
 
     table += recurseTables
