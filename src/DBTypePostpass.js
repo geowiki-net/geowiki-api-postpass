@@ -206,7 +206,7 @@ class DBTypePostpass {
           if (set[1].recurse === 'w') {
             r.distinct = true
             const rtable = compileSelect(r, { fields: Object.keys(r.select) })
-            table += ' RIGHT JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.osm_id AND ' + tableAlias + '.osm_type=r' + i + '.osm_type'
+            table += ' JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.osm_id AND ' + tableAlias + '.osm_type=r' + i + '.osm_type'
 
             select.osm_id = `r${i}.osm_id`
             select.osm_type = `r${i}.osm_type`
