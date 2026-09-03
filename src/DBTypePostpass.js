@@ -74,7 +74,7 @@ class DBTypePostpass {
 
         result = [parts.shift()]
         result[0].where = [result[0].where]
-        parts.forEach(part => {
+        parts.forEach((part, i) => {
           if (!result.some(r => {
             if (r.table === part.table) {
               r.where.push(part.where)
@@ -82,6 +82,10 @@ class DBTypePostpass {
             }
             return false
           })) {
+            // recompile with different tableAlias
+            const o = {...options, tableAlias: options.tableAlias + i}
+            part = this.compileStmt(stmt.parts[i], o)
+
             part.where = [part.where]
             result.push(part)
           }
