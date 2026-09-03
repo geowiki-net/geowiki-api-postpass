@@ -3,6 +3,8 @@ const geowiki = require('./src/geowikiAPI')
 const queryList = require('./queries.json')
 const getRequests = require('./get.json')
 
+const newQueryList = JSON.parse(JSON.stringify(queryList))
+
 describe('Requests', function () {
   describe('BBoxQuery', function () {
     Object.entries(queryList).forEach(([query, def]) => {
@@ -25,6 +27,11 @@ describe('Requests', function () {
           },
           (err, result) => {
             if (err) { return done(err) }
+
+            newQueryList[query].bboxquery = {
+              expectedElements: result.elements.length
+            }
+            updateFile()
 
             if (def.bboxquery) {
               if ('expectedElements' in def.bboxquery) {
@@ -86,3 +93,13 @@ describe('Requests', function () {
     })
   })
 })
+
+function updateFile () {
+  const fs = require('fs')
+  const config = require('./config.json')
+
+  if (config.updateExpectData) {
+    const content = JSON.stringify(newQueryList, null, '  ') + '\n'
+    fs.writeFileSync('test/queries.json', content)
+  }
+}
