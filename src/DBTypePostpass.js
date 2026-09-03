@@ -167,8 +167,8 @@ class DBTypePostpass {
         select.nodes = '\'{}\'::bigint[] AS "nodes"'
         select.members = '\'{}\'::jsonb AS "members"'
       } else {
-        select.nodes = 'w.nodes'
-        select.members = 'r.members'
+        select.nodes = `${tableAlias}w.nodes`
+        select.members = `${tableAlias}r.members`
         requireMemberTables = true
       }
     }
@@ -193,7 +193,7 @@ class DBTypePostpass {
           switch (set[1].recurse) {
             case 'w':
               r.select = {
-                osm_id: 'UNNEST(w.nodes) osm_id',
+                osm_id: `UNNEST(${tableAlias}w.nodes) osm_id`,
                 osm_type: "'N' osm_type",
               }
               if (options.properties & (GeowikiAPI.GEOM|GeowikiAPI.CENTER|GeowikiAPI.BBOX)) {
@@ -226,10 +226,10 @@ class DBTypePostpass {
             const rtable = compileSelect(r, { fields: Object.keys(r.select) })
             requireMemberTables = true
             if (stmt.type !== 'relation') {
-              recurseTables += ' LEFT JOIN LATERAL UNNEST(nodes) AS n' + i +'(ref) ON TRUE'
+              recurseTables += ` LEFT JOIN LATERAL UNNEST(${tableAlias}w.nodes) AS n${i}(ref) ON TRUE`
             }
             if (stmt.type !== 'way') {
-              recurseTables += ' LEFT JOIN LATERAL jsonb_to_recordset(members) AS m' + i + '(ref BIGINT, role TEXT, type TEXT) ON TRUE'
+              recurseTables += ` LEFT JOIN LATERAL jsonb_to_recordset(${tableAlias}r.members) AS m${i}(ref BIGINT, role TEXT, type TEXT) ON TRUE`
             }
 
             recurseTables += ' JOIN (' + rtable + ') r' + i + ' ON '
@@ -280,7 +280,7 @@ class DBTypePostpass {
     }
 
     if (requireMemberTables) {
-      table += ` LEFT JOIN planet_osm_ways w ON ${tableAlias}.osm_type='W' AND ${tableAlias}.osm_id=w.id LEFT JOIN planet_osm_rels r ON ${tableAlias}.osm_type='R' AND ${tableAlias}.osm_id=r.id`
+      table += ` LEFT JOIN planet_osm_ways ${tableAlias}w ON ${tableAlias}.osm_type='W' AND ${tableAlias}.osm_id=${tableAlias}w.id LEFT JOIN planet_osm_rels ${tableAlias}r ON ${tableAlias}.osm_type='R' AND ${tableAlias}.osm_id=${tableAlias}r.id`
     }
 
     table += recurseTables
