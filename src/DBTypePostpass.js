@@ -249,7 +249,7 @@ class DBTypePostpass {
         })
       }
 
-      normalInputSets.forEach(set => {
+      normalInputSets.forEach((set, i) => {
         const r = this.compileStmt(set[1].set, options)
 
         if (table !== r.table) {
@@ -257,7 +257,15 @@ class DBTypePostpass {
             table = r.table
             select = r.select
           } else if (set[1].set.type !== 'nwr') {
-            throw new Error('what to do')
+            const setOptions = {...options}
+            if (stmt.type !== 'nwr') {
+              setOptions.tableAlias = 't' + i
+            }
+
+            // re-compile again with different table name
+            const r = this.compileStmt(set[1].set, setOptions)
+
+            recurseTables += ` JOIN ${r.table} ON ${tableAlias}.osm_id=${options.tableAlias}.osm_id AND ${tableAlias}.osm_type=${options.tableAlias}.osm_type`
           }
         }
 
