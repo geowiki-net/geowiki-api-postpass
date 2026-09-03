@@ -183,7 +183,12 @@ class DBTypePostpass {
 
       if (recursingInputSets.length) {
         recursingInputSets.forEach((set, i) => {
-          const r = this.compileStmt(set[1].set, options)
+          const revOptions = {...options}
+          if (['w'].includes(set[1].recurse)) {
+            revOptions.properties |= GeowikiAPI.MEMBERS
+          }
+
+          const r = this.compileStmt(set[1].set, revOptions)
           switch (set[1].recurse) {
             case 'w':
               r.select = {
