@@ -219,6 +219,13 @@ class DBTypePostpass {
                 osm_type: "'N' osm_type",
               }
               break
+            case 'bw':
+            case 'br':
+              r.select = {
+                osm_id: `${revOptions.tableAlias}.osm_id`,
+                osm_type: `${revOptions.tableAlias}.osm_type`
+              }
+              break
             default:
               throw new Error('unsupported recursing type "' + set[1].recurse + '"')
           }
@@ -266,6 +273,14 @@ class DBTypePostpass {
             } else {
               recurseTables += on[0]
             }
+          }
+          else if (['bw', 'br'].includes(set[1].recurse)) {
+            distinct = true
+            const rtable = compileSelect(r, { fields: Object.keys(r.select) })
+            requireMemberTables = true
+            recurseTables += ` LEFT JOIN LATERAL jsonb_to_recordset(${tableAlias}r.members) AS m${i}(ref BIGINT, role TEXT, type TEXT) ON TRUE`
+
+            recurseTables += ' JOIN (' + rtable + ') r' + i + ' ON ' + 'r' + i + '.osm_id=m' + i + '.ref AND r' + i + '.osm_type=m' + i + '.type' + ('role' in set[1] ? ' AND m' + i + '.role=' + quote(set[1].role) : '')
           }
         })
       }
