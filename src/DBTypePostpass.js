@@ -193,7 +193,7 @@ class DBTypePostpass {
           switch (set[1].recurse) {
             case 'w':
               r.select = {
-                osm_id: `UNNEST(${tableAlias}w.nodes) osm_id`,
+                osm_id: `UNNEST(${revOptions.tableAlias}w.nodes) osm_id`,
                 osm_type: "'N' osm_type",
               }
               if (options.properties & (GeowikiAPI.GEOM|GeowikiAPI.CENTER|GeowikiAPI.BBOX)) {
