@@ -285,6 +285,7 @@ class DBTypePostpass {
 
     if (requireMemberTables) {
       table += ` LEFT JOIN planet_osm_ways ${tableAlias}w ON ${tableAlias}.osm_type='W' AND ${tableAlias}.osm_id=${tableAlias}w.id LEFT JOIN planet_osm_rels ${tableAlias}r ON ${tableAlias}.osm_type='R' AND ${tableAlias}.osm_id=${tableAlias}r.id`
+      requireMemberTables = false
     }
 
     table += recurseTables
