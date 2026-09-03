@@ -5,6 +5,8 @@ const defines = require('@geowiki-net/geowiki-api')
 const BoundingBox = require('boundingbox')
 const queryList = require('./queries.json')
 
+const newQueryList = JSON.parse(JSON.stringify(queryList))
+
 describe('Test compiling filters', function () {
   describe('compile filter with tags, without bounds', function () {
     Object.entries(queryList).forEach(([query, def]) => {
@@ -17,6 +19,9 @@ describe('Test compiling filters', function () {
         const result = db.compile(filter, {
           properties: defines.TAGS
         })
+
+        newQueryList[query].tags = result[0]
+        updateFile()
 
         assert.equal(result[0], def.tags)
       })
@@ -56,6 +61,9 @@ describe('Test compiling filters', function () {
           properties: defines.TAGS|defines.MEMBERS
         })
 
+        newQueryList[query]['tags-members'] = result[0]
+        updateFile()
+
         assert.equal(result[0], def['tags-members'])
       })
     })
@@ -94,8 +102,22 @@ describe('Test compiling filters', function () {
           properties: defines.ALL
         })
 
+        console.log(query)
+        newQueryList[query]['all'] = result[0]
+        updateFile()
+
         assert.equal(result[0], def['all'])
       })
     })
   })
 })
+
+function updateFile () {
+  const fs = require('fs')
+  const config = require('./config.json')
+
+  if (config.updateExpectData) {
+    const content = JSON.stringify(newQueryList, null, '  ') + '\n'
+    fs.writeFileSync('test/queries.json', content)
+  }
+}

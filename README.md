@@ -68,3 +68,6 @@ Run the server:
 ```sh
 ./postpass-server
 ```
+
+## DEVELOPMENT
+If you change code which modifies test data, you can set the flag `updateExpectData` in `test/config.json` to true. This will update (some) expected data.
