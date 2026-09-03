@@ -189,7 +189,7 @@ class DBTypePostpass {
       if (recursingInputSets.length) {
         recursingInputSets.forEach((set, i) => {
           const revOptions = {...options, tableAlias: 't' + i}
-          if (['w'].includes(set[1].recurse)) {
+          if (['w', 'r'].includes(set[1].recurse)) {
             revOptions.properties |= GeowikiAPI.MEMBERS
           }
 
@@ -202,6 +202,15 @@ class DBTypePostpass {
               }
               if (options.properties & (GeowikiAPI.GEOM|GeowikiAPI.CENTER|GeowikiAPI.BBOX)) {
                 r.select.geom = `(ST_DumpPoints(${tableAlias}.geom)).geom geom`
+              }
+              break
+            case 'r':
+              r.select = {
+                osm_id: `${revOptions.tableAlias}.osm_id`,
+                osm_type: `${revOptions.tableAlias}.osm_type`,
+                ref: `m${i}.ref`,
+                type: `m${i}.type`,
+                role: `m${i}.role`
               }
               break
             case 'bn':
@@ -224,6 +233,12 @@ class DBTypePostpass {
             if (options.properties & GeowikiAPI.GEOM) {
               select.geom = `r${i}.geom`
             }
+          }
+          else if (set[1].recurse === 'r') {
+            r.distinct = true
+            r.table += ` LEFT JOIN LATERAL jsonb_to_recordset(${revOptions.tableAlias}r.members) AS m${i}(ref BIGINT, role TEXT, type TEXT) ON TRUE`
+            let rtable = compileSelect(r, { fields: Object.keys(r.select) })
+            recurseTables += ' JOIN (' + rtable + ') r' + i + ' ON ' + tableAlias + '.osm_id=r' + i + '.ref AND ' + tableAlias + '.osm_type=r' + i + '.type'
           }
           else if (set[1].recurse === 'bn') {
             distinct = true
