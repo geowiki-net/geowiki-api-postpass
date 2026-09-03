@@ -138,6 +138,7 @@ class DBTypePostpass {
   compileFilterQuery (stmt, options) {
     let distinct = false
     let recurseTables = ''
+    let requireMemberTables = false
 
     if (!options.tableAlias) {
       options.tableAlias = 't'
@@ -168,7 +169,7 @@ class DBTypePostpass {
       } else {
         select.nodes = 'w.nodes'
         select.members = 'r.members'
-        table += ` LEFT JOIN planet_osm_ways w ON ${tableAlias}.osm_type='W' AND ${tableAlias}.osm_id=w.id LEFT JOIN planet_osm_rels r ON ${tableAlias}.osm_type='R' AND ${tableAlias}.osm_id=r.id`
+        requireMemberTables = true
       }
     }
 
@@ -223,6 +224,7 @@ class DBTypePostpass {
           else if (set[1].recurse === 'bn') {
             distinct = true
             const rtable = compileSelect(r, { fields: Object.keys(r.select) })
+            requireMemberTables = true
             if (stmt.type !== 'relation') {
               recurseTables += ' LEFT JOIN LATERAL UNNEST(nodes) AS n' + i +'(ref) ON TRUE'
             }
@@ -256,6 +258,7 @@ class DBTypePostpass {
           if (stmt.type === 'nwr') {
             table = r.table
             select = r.select
+            requireMemberTables = r.requireMemberTables
           } else if (set[1].set.type !== 'nwr') {
             const setOptions = {...options}
             if (stmt.type !== 'nwr') {
@@ -276,11 +279,16 @@ class DBTypePostpass {
       })
     }
 
+    if (requireMemberTables) {
+      table += ` LEFT JOIN planet_osm_ways w ON ${tableAlias}.osm_type='W' AND ${tableAlias}.osm_id=w.id LEFT JOIN planet_osm_rels r ON ${tableAlias}.osm_type='R' AND ${tableAlias}.osm_id=r.id`
+    }
+
     table += recurseTables
 
     return {
       select,
       distinct,
+      requireMemberTables,
       table,
       where,
       needFilter
