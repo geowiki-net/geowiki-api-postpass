@@ -184,7 +184,7 @@ class DBTypePostpass {
 
       if (recursingInputSets.length) {
         recursingInputSets.forEach((set, i) => {
-          const revOptions = {...options}
+          const revOptions = {...options, tableAlias: 't' + i}
           if (['w'].includes(set[1].recurse)) {
             revOptions.properties |= GeowikiAPI.MEMBERS
           }
@@ -202,7 +202,7 @@ class DBTypePostpass {
               break
             case 'bn':
               r.select = {
-                osm_id: 'osm_id',
+                osm_id: `${revOptions.tableAlias}.osm_id`,
                 osm_type: "'N' osm_type",
               }
               break
